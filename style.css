@@ -9,3 +9,37 @@ body{
 }
 #canvas-container{margin-top:12px;}
 h1{font-size:18px;margin:0 0 8px 0}
+
+/* 대표 교수 카드 스타일 */
+#professor-card {
+  display: flex;
+  align-items: center;
+  background: #18181c;
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 18px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  max-width: 420px;
+}
+#professor-photo {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 18px;
+  border: 2px solid #444;
+}
+#professor-card h2 {
+  margin: 0 0 4px 0;
+  font-size: 22px;
+}
+#professor-title {
+  margin: 0 0 4px 0;
+  font-size: 15px;
+  color: #b0b0b0;
+}
+#professor-email {
+  margin: 0;
+  font-size: 14px;
+  color: #a0a0a0;
+}
