@@ -1,13 +1,23 @@
 # 박사과정/학생 카드 스타일
 .student-card {
+  background: none;
+  box-shadow: none;
+  padding: 0;
+  margin-bottom: 15px;
+}
+.student-row {
+  display: flex;
+  gap: 24px;
+}
+.student-profile {
   display: flex;
   align-items: center;
   background: #20202a;
   border-radius: 10px;
   padding: 13px 18px;
-  margin-bottom: 15px;
   box-shadow: 0 1px 6px rgba(0,0,0,0.10);
-  max-width: 420px;
+  max-width: 370px;
+  min-width: 270px;
 }
 .student-photo {
   width: 90px;
