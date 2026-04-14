@@ -1,3 +1,34 @@
+/* 연구실 로고 및 타이틀 */
+#sega-lab-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-left: 36px;
+  gap: 6px;
+}
+.sega-logo-circle {
+  background: linear-gradient(135deg, #ffd700 60%, #ffb300 100%);
+  color: #18181c;
+  font-weight: bold;
+  font-size: 28px;
+  border-radius: 50%;
+  width: 74px;
+  height: 74px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+  letter-spacing: 2px;
+  margin-bottom: 2px;
+}
+.sega-lab-title {
+  font-size: 16px;
+  color: #ffd700;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.13);
+  white-space: nowrap;
+}
 /* 학생 카드 스타일 */
 .student-card {
   background: none;
