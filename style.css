@@ -1,3 +1,50 @@
+/* 학생 카드 스타일 */
+.student-card {
+  background: none;
+  box-shadow: none;
+  padding: 0;
+  margin-bottom: 15px;
+}
+.student-row {
+  display: flex;
+  gap: 24px;
+}
+.student-profile {
+  display: flex;
+  align-items: center;
+  background: #20202a;
+  border-radius: 10px;
+  padding: 13px 18px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.10);
+  max-width: 370px;
+  min-width: 270px;
+}
+.student-photo {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 18px;
+  border: 2px solid #555;
+}
+.student-info {
+  display: flex;
+  flex-direction: column;
+}
+.student-name {
+  margin: 0 0 4px 0;
+  font-size: 18px;
+}
+.student-title {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  color: #b0b0b0;
+}
+.student-email {
+  margin: 0;
+  font-size: 13px;
+  color: #a0a0a0;
+}
 /* 간단한 스타일 */
 html,body{height:100%;}
 body{
