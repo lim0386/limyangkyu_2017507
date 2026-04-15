@@ -25,6 +25,7 @@
   <div id="professor-buttons" style="display:none; margin-bottom:12px;">
     <button id="btn-intro" type="button">자기소개</button>
     <button id="btn-link" type="button">Google Scholar</button>
+    <button id="btn-youtube" type="button">YouTube</button>
   </div>
   <!-- 자기소개 영역은 p5js 스케치 아래로 이동 -->
   <!-- 학생 카드 -->
@@ -188,6 +189,10 @@ const btns = document.getElementById('professor-buttons');
 const intro = document.getElementById('professor-intro');
 const btnIntro = document.getElementById('btn-intro');
 const btnLink = document.getElementById('btn-link');
+const btnYoutube = document.getElementById('btn-youtube');
+btnYoutube.addEventListener('click', () => {
+  window.open('https://www.youtube.com/@Professor_Bravissimo_Parlalote/shorts', '_blank');
+});
 let introVisible = false;
 let hideTimeout = null;
 
