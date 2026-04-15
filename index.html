@@ -189,7 +189,14 @@ document.getElementById('btn-intro-close').addEventListener('click', () => {
   document.getElementById('canvas-container').style.display = 'block';
   introVisible = false;
 });
+
 btnLink.addEventListener('click', () => {
-  window.open('https://scholar.google.com/citations?hl=ko&user=Abd4YukAAAAJ&view_op=list_works&gmla=AEk_c1txzNqTE-xjIOKhZZs4U83PxBNIPcJRlo3MZFsUt2PzEJKSCuUa2qw4JNBivwXpoV6u7ftErEagy2jw6H9Ui42T6Rbq2XRECWkP1t4tDRZwMj-enJUPyg', '_blank');
+  introVisible = true;
+  const introDiv = document.getElementById('professor-intro');
+  const introContent = document.getElementById('professor-intro-content');
+  const canvasContainer = document.getElementById('canvas-container');
+  introDiv.style.display = 'block';
+  canvasContainer.style.display = 'none';
+  introContent.innerHTML = `<iframe src="https://scholar.google.com/citations?hl=ko&user=Abd4YukAAAAJ&view_op=list_works&gmla=AEk_c1txzNqTE-xjIOKhZZs4U83PxBNIPcJRlo3MZFsUt2PzEJKSCuUa2qw4JNBivwXpoV6u7ftErEagy2jw6H9Ui42T6Rbq2XRECWkP1t4tDRZwMj-enJUPyg" style="width:100%;height:70vh;border:none;background:#fff;"></iframe>`;
 });
 </script>
