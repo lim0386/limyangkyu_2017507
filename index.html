@@ -108,7 +108,7 @@
       </script>
       <div style="display:flex; flex-direction:column; align-items:flex-start;">
         <div class="student-profile" id="moon-profile">
-          <img src="mhmoon.png" alt="문민혜 사진" class="student-photo">
+          <img src="mhmoon2.png" alt="문민혜 사진" class="student-photo">
           <div class="student-info">
             <h3 class="student-name">문민혜</h3>
             <p class="student-title">석사과정</p>
@@ -163,7 +163,10 @@
             </div>
             <button id=\"btn-moon-intro-close\" style=\"margin-top:24px; padding:8px 24px; border:none; border-radius:6px; background:#ffd700; color:#23232b; font-weight:bold; font-size:16px; cursor:pointer;\">Close</button>
           `;
+          // 항상 p5js sketch 아래에만 나오게 위치 이동
+          document.getElementById('canvas-container').after(moonIntroDiv);
           moonIntroDiv.style.display = 'block';
+          moonIntroDiv.scrollIntoView({behavior: 'smooth', block: 'start'});
           document.getElementById('btn-moon-intro-close').onclick = () => {
             moonIntroDiv.style.display = 'none';
           };
