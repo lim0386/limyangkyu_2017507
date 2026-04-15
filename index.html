@@ -119,10 +119,7 @@
           <button id="btn-moon-intro" type="button">자기소개</button>
         </div>
       </div>
-    <div id="moon-intro" style="display:none; background:#23232b; color:#fff; padding:36px 32px; border-radius:18px; max-width:480px; width:90%; box-shadow:0 4px 32px #0008; text-align:left; margin:32px auto 0 auto;">
-      <div id="moon-intro-content" style="text-align:left;"></div>
-      <button id="btn-moon-intro-close" style="margin-top:24px; padding:8px 24px; border:none; border-radius:6px; background:#ffd700; color:#23232b; font-weight:bold; font-size:16px; cursor:pointer;">Close</button>
-    </div>
+    <div id="moon-intro" style="display:none; background:#23232b; color:#fff; padding:36px 32px; border-radius:18px; max-width:480px; width:90%; box-shadow:0 4px 32px #0008; text-align:left; margin:18px auto 18px auto;"></div>
         <script>
         // 문민혜 카드 자기소개 버튼 표시 및 동작
         const moonProfile = document.getElementById('moon-profile');
@@ -152,10 +149,9 @@
         moonBtns.addEventListener('mouseenter', showMoonBtns);
         moonBtns.addEventListener('mouseleave', hideMoonBtnsDelayed);
         btnMoonIntro.addEventListener('click', () => {
-          moonIntroDiv.style.display = 'block';
-          canvasContainer.style.display = 'none';
-          moonIntroContent.innerHTML = `
-            <div style="padding-left:18px;">
+          const moonIntroDiv = document.getElementById('moon-intro');
+          moonIntroDiv.innerHTML = `
+            <div style=\"padding-left:18px;\">
               <div style='font-size:1.25em; font-weight:600; margin-bottom:2px;'>Education</div>
               <li>2021~Present: M.S. in IT Media Engineering, Duksung Women's University (in progress)</li>
               <li>1993~1998: B.A. in Business Administration, Seoul Women's University</li>
@@ -165,11 +161,12 @@
               <li>2004~2008: Director, JN3C Co., Ltd. (Online Game Production)</li>
               <li>2002~2004: Deputy Manager, SolutionBox Co., Ltd. (Digital Content, P2P Service Development)</li>
             </div>
+            <button id=\"btn-moon-intro-close\" style=\"margin-top:24px; padding:8px 24px; border:none; border-radius:6px; background:#ffd700; color:#23232b; font-weight:bold; font-size:16px; cursor:pointer;\">Close</button>
           `;
-        });
-        btnMoonIntroClose.addEventListener('click', () => {
-          moonIntroDiv.style.display = 'none';
-          canvasContainer.style.display = 'block';
+          moonIntroDiv.style.display = 'block';
+          document.getElementById('btn-moon-intro-close').onclick = () => {
+            moonIntroDiv.style.display = 'none';
+          };
         });
         </script>
         <div class="student-profile">
