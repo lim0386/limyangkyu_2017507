@@ -54,14 +54,47 @@
               <p class="student-email">Email: </p>
             </div>
         </div>
-      <div class="student-profile">
-        <img src="boti.png" alt="보티존 사진" class="student-photo">
-        <div class="student-info">
-          <h3 class="student-name">보티존</h3>
-          <p class="student-title">석사과정</p>
-          <p class="student-email">Email: botirjonabdulvoxidov@gmail.com</p>
+      <div style="display:flex; flex-direction:column; align-items:flex-start;">
+        <div class="student-profile" id="boti-profile">
+          <img src="boti.png" alt="보티존 사진" class="student-photo">
+          <div class="student-info">
+            <h3 class="student-name">보티존</h3>
+            <p class="student-title">석사과정</p>
+            <p class="student-email">Email: botirjonabdulvoxidov@gmail.com</p>
+          </div>
+        </div>
+        <div id="boti-buttons" style="display:none; margin-top:8px; margin-bottom:12px;">
+          <button id="btn-boti-link" type="button">연구업적</button>
         </div>
       </div>
+      <script>
+      // 보티존 카드 연구업적 버튼 표시 및 동작
+      const botiProfile = document.getElementById('boti-profile');
+      const botiBtns = document.getElementById('boti-buttons');
+      const btnBotiLink = document.getElementById('btn-boti-link');
+      let botiHideTimeout = null;
+
+      function showBotiBtns() {
+        if (botiHideTimeout) {
+          clearTimeout(botiHideTimeout);
+          botiHideTimeout = null;
+        }
+        botiBtns.style.display = 'flex';
+      }
+      function hideBotiBtnsDelayed() {
+        if (botiHideTimeout) clearTimeout(botiHideTimeout);
+        botiHideTimeout = setTimeout(() => {
+          botiBtns.style.display = 'none';
+        }, 2000);
+      }
+      botiProfile.addEventListener('mouseenter', showBotiBtns);
+      botiProfile.addEventListener('mouseleave', hideBotiBtnsDelayed);
+      botiBtns.addEventListener('mouseenter', showBotiBtns);
+      botiBtns.addEventListener('mouseleave', hideBotiBtnsDelayed);
+      btnBotiLink.addEventListener('click', () => {
+        window.open('https://www.earticle.net/Article/A474319', '_blank');
+      });
+      </script>
       <div style="display:flex; flex-direction:column; align-items:flex-start;">
         <div class="student-profile" id="seo-profile">
         <img src="shseo.jpg" alt="서수현 사진" class="student-photo">
