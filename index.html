@@ -106,14 +106,72 @@
         window.open('https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002914157', '_blank');
       });
       </script>
-      <div class="student-profile">
-        <img src="mhmoon.png" alt="문민혜 사진" class="student-photo">
-        <div class="student-info">
-          <h3 class="student-name">문민혜</h3>
-          <p class="student-title">석사과정</p>
-          <p class="student-email">Email: minhyemoon@duksung.ac.kr</p>
+      <div style="display:flex; flex-direction:column; align-items:flex-start;">
+        <div class="student-profile" id="moon-profile">
+          <img src="mhmoon.png" alt="문민혜 사진" class="student-photo">
+          <div class="student-info">
+            <h3 class="student-name">문민혜</h3>
+            <p class="student-title">석사과정</p>
+            <p class="student-email">Email: minhyemoon@duksung.ac.kr</p>
+          </div>
+        </div>
+        <div id="moon-buttons" style="display:none; margin-top:8px; margin-bottom:12px;">
+          <button id="btn-moon-intro" type="button">자기소개</button>
         </div>
       </div>
+    <div id="moon-intro" style="display:none; background:#23232b; color:#fff; padding:36px 32px; border-radius:18px; max-width:480px; width:90%; box-shadow:0 4px 32px #0008; text-align:left; margin:32px auto 0 auto;">
+      <div id="moon-intro-content" style="text-align:left;"></div>
+      <button id="btn-moon-intro-close" style="margin-top:24px; padding:8px 24px; border:none; border-radius:6px; background:#ffd700; color:#23232b; font-weight:bold; font-size:16px; cursor:pointer;">Close</button>
+    </div>
+        <script>
+        // 문민혜 카드 자기소개 버튼 표시 및 동작
+        const moonProfile = document.getElementById('moon-profile');
+        const moonBtns = document.getElementById('moon-buttons');
+        const btnMoonIntro = document.getElementById('btn-moon-intro');
+        const moonIntroDiv = document.getElementById('moon-intro');
+        const moonIntroContent = document.getElementById('moon-intro-content');
+        const btnMoonIntroClose = document.getElementById('btn-moon-intro-close');
+        const canvasContainer = document.getElementById('canvas-container');
+        let moonHideTimeout = null;
+
+        function showMoonBtns() {
+          if (moonHideTimeout) {
+            clearTimeout(moonHideTimeout);
+            moonHideTimeout = null;
+          }
+          moonBtns.style.display = 'flex';
+        }
+        function hideMoonBtnsDelayed() {
+          if (moonHideTimeout) clearTimeout(moonHideTimeout);
+          moonHideTimeout = setTimeout(() => {
+            moonBtns.style.display = 'none';
+          }, 2000);
+        }
+        moonProfile.addEventListener('mouseenter', showMoonBtns);
+        moonProfile.addEventListener('mouseleave', hideMoonBtnsDelayed);
+        moonBtns.addEventListener('mouseenter', showMoonBtns);
+        moonBtns.addEventListener('mouseleave', hideMoonBtnsDelayed);
+        btnMoonIntro.addEventListener('click', () => {
+          moonIntroDiv.style.display = 'block';
+          canvasContainer.style.display = 'none';
+          moonIntroContent.innerHTML = `
+            <div style="padding-left:18px;">
+              <div style='font-size:1.25em; font-weight:600; margin-bottom:2px;'>Education</div>
+              <li>2021~Present: M.S. in IT Media Engineering, Duksung Women's University (in progress)</li>
+              <li>1993~1998: B.A. in Business Administration, Seoul Women's University</li>
+              <div style='font-size:1.25em; font-weight:600; margin:18px 0 2px 0;'>Career</div>
+              <li>2013~2021: CEO, Eppione Co., Ltd. (Digital Content Production)</li>
+              <li>2010~2013: CEO, Eppistudio (Digital Content for Children / Mobile Game Production)</li>
+              <li>2004~2008: Director, JN3C Co., Ltd. (Online Game Production)</li>
+              <li>2002~2004: Deputy Manager, SolutionBox Co., Ltd. (Digital Content, P2P Service Development)</li>
+            </div>
+          `;
+        });
+        btnMoonIntroClose.addEventListener('click', () => {
+          moonIntroDiv.style.display = 'none';
+          canvasContainer.style.display = 'block';
+        });
+        </script>
         <div class="student-profile">
             <img src="yhkim.png" alt="김영한 사진" class="student-photo">
             <div class="student-info">
