@@ -135,10 +135,10 @@ h1{font-size:18px;margin:0 0 8px 0}
 }
 /* Ensure profile wrappers keep layout stable and buttons overlay */
 .profile-wrap{ position: relative; display:inline-block; }
-.profile-wrap > div[id$="-buttons"]{ position:absolute; left:0; top:100%; display:none; gap:8px; z-index:10; }
+.profile-wrap > div[id$="-buttons"]{ position:absolute; left:0; top:100%; display:none; gap:8px; z-index:10000; }
 /* Prevent any accidental transform/scale on hover */
 .student-profile, #professor-card { transition: none !important; transform: none !important; }
-#professor-buttons{ display:none; z-index:9999 !important; }
+#professor-buttons{ z-index:10001 !important; }
 
 /* responsive card scaling */
 :root{ --card-scale: 1; --card-base-w: 380px; --card-base-h: 120px; }
