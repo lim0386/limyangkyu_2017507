@@ -160,9 +160,8 @@
         moonBtns.addEventListener('mouseenter', showMoonBtns);
         moonBtns.addEventListener('mouseleave', hideMoonBtnsDelayed);
         btnMoonIntro.addEventListener('click', () => {
-          const moonIntroDiv = document.getElementById('moon-intro');
-          moonIntroDiv.innerHTML = `
-            <div style=\"padding-left:18px;\">
+          const content = `
+            <div style="padding-left:18px;">
               <div style='font-size:1.25em; font-weight:600; margin-bottom:2px;'>Education</div>
               <li>2021~Present: M.S. in IT Media Engineering, Duksung Women's University (in progress)</li>
               <li>1993~1998: B.A. in Business Administration, Seoul Women's University</li>
@@ -172,13 +171,14 @@
               <li>2004~2008: Director, JN3C Co., Ltd. (Online Game Production)</li>
               <li>2002~2004: Deputy Manager, SolutionBox Co., Ltd. (Digital Content, P2P Service Development)</li>
             </div>
-            <button id=\"btn-moon-intro-close\" style=\"margin-top:24px; padding:8px 24px; border:none; border-radius:6px; background:#ffd700; color:#23232b; font-weight:bold; font-size:16px; cursor:pointer;\">Close</button>
           `;
-          // 화면 스크롤 없이 현재 위치에 바로 표시
-          moonIntroDiv.style.display = 'block';
-          document.getElementById('btn-moon-intro-close').onclick = () => {
-            moonIntroDiv.style.display = 'none';
-          };
+          // Put moon intro content into the shared professor-intro panel so it appears in the same place
+          const introDiv = document.getElementById('professor-intro');
+          const introContent = document.getElementById('professor-intro-content');
+          const canvasContainer = document.getElementById('canvas-container');
+          introContent.innerHTML = content;
+          introDiv.style.display = 'block';
+          canvasContainer.style.display = 'none';
         });
         </script>
         <div class="student-profile">
