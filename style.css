@@ -135,7 +135,7 @@ h1{font-size:18px;margin:0 0 8px 0}
 .profile-wrap > div[id$="-buttons"]{ position:absolute; left:0; top:100%; display:none; gap:8px; z-index:10; }
 /* Prevent any accidental transform/scale on hover */
 .student-profile, #professor-card { transition: none !important; transform: none !important; }
-#professor-buttons{ display:none; z-index:12; }
+#professor-buttons{ display:none; z-index:9999 !important; }
 
 /* responsive card scaling */
 :root{ --card-scale: 1; }
