@@ -129,6 +129,14 @@ h1{font-size:18px;margin:0 0 8px 0}
 .student-profile, #professor-card { transition: none !important; transform: none !important; }
 #professor-buttons{ display:none; z-index:12; }
 
+/* responsive card scaling */
+:root{ --card-scale: 1; }
+.profile-wrap, #professor-card {
+  transform-origin: top left;
+  transform: scale(var(--card-scale));
+  transition: transform 180ms ease;
+}
+
 /* Fade-in overlay for button groups */
 .buttons-overlay{
   opacity: 0;
