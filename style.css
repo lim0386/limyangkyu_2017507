@@ -35,7 +35,7 @@
   box-shadow: none;
   padding: 0;
   margin-bottom: 15px;
-  margin-top: 40px;
+  margin-top: 32px;
 }
 .student-row {
   display: flex;
@@ -128,6 +128,29 @@ h1{font-size:18px;margin:0 0 8px 0}
 /* Prevent any accidental transform/scale on hover */
 .student-profile, #professor-card { transition: none !important; transform: none !important; }
 #professor-buttons{ display:none; z-index:12; }
+
+/* Fade-in overlay for button groups */
+.buttons-overlay{
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 220ms ease, transform 220ms ease;
+  visibility: hidden;
+  display: flex;
+  gap: 8px;
+}
+.buttons-overlay.visible{
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+}
+.buttons-overlay button{
+  background: #ffd700;
+  color: #23232b;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
 /* 간단한 스타일 */
 html,body{height:100%;}
 body{
