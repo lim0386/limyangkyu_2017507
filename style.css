@@ -146,6 +146,30 @@ h1{font-size:18px;margin:0 0 8px 0}
   will-change: transform;
 }
 
+/* scale inner elements proportionally using the same variable so layout and wrapping adapt */
+.student-profile{ min-width: calc(220px * var(--card-scale)); }
+.student-photo{
+  width: calc(90px * var(--card-scale));
+  height: calc(90px * var(--card-scale));
+  margin-right: calc(18px * var(--card-scale));
+  border-width: calc(2px * var(--card-scale));
+}
+.student-name{ font-size: calc(18px * var(--card-scale)); }
+.student-title{ font-size: calc(14px * var(--card-scale)); }
+.student-email{ font-size: calc(13px * var(--card-scale)); }
+.student-info{ gap: calc(6px * var(--card-scale)); }
+
+#professor-photo{
+  width: calc(100px * var(--card-scale));
+  height: calc(100px * var(--card-scale));
+  margin-right: calc(18px * var(--card-scale));
+  border-width: calc(2px * var(--card-scale));
+}
+#professor-card{ padding: calc(16px * var(--card-scale)) calc(20px * var(--card-scale)); border-radius: calc(12px * var(--card-scale)); }
+#professor-card h2{ font-size: calc(22px * var(--card-scale)); }
+
+.student-name, .student-title, .student-email{ overflow-wrap: break-word; }
+
 /* Fade-in overlay for button groups */
 .buttons-overlay{
   opacity: 0;
