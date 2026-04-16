@@ -1,3 +1,9 @@
+/* Global variables */
+:root{
+  --card-scale: 1;
+  --card-width: 420px;
+}
+
 /* 연구실 로고 및 타이틀 */
 #sega-lab-logo {
   display: flex;
@@ -29,204 +35,78 @@
   text-shadow: 0 2px 8px rgba(0,0,0,0.13);
   white-space: nowrap;
 }
-/* 학생 카드 스타일 */
-.student-card {
-  background: none;
-  box-shadow: none;
-  padding: 0;
-  margin-bottom: 15px;
-  margin-top: 32px;
-}
 
-/* shared card width for professor and students */
-:root{ --card-scale: 1; --card-width: 420px; }
-
-.student-row {
-  display: flex;
-  gap: 24px;
-  overflow: visible;
-}
-.student-profile {
-  display: flex;
-  align-items: center;
-  background: #20202a;
-  border-radius: 10px;
-  padding: 13px 18px;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.10);
-  width: var(--card-width);
-  max-width: 100%;
-  box-sizing: border-box;
-  overflow: visible;
-}
-
-.student-info{ min-width:0; }
-.student-name, .student-title, .student-email{ white-space:normal; }
-
-#professor-card{ z-index: 800; position: relative; }
-#professor-buttons{ z-index: 9999 !important; }
-.student-photo {
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  object-fit: cover;
-.student-profile {
-  display: flex;
-  align-items: center;
-  background: #20202a;
-  border-radius: 10px;
-  padding: 13px 18px;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.10);
-  width: var(--card-width);
-  max-width: 100%;
-  box-sizing: border-box;
-  overflow: visible;
-}
-  margin-right: 18px;
-  border: 2px solid #555;
-}
-.student-info {
-  display: flex;
-  flex-direction: column;
-}
-.student-name {
-  margin: 0 0 4px 0;
-  font-size: 18px;
-}
-.student-title {
-  margin: 0 0 4px 0;
-  font-size: 14px;
-  color: #b0b0b0;
-}
-.student-email {
-  margin: 0;
-  font-size: 13px;
-  color: #a0a0a0;
-}
-/* 간단한 스타일 */
+/* Layout basics */
 html,body{height:100%; overflow-x:hidden; overflow-y:auto;}
 body{
-#professor-card {
-  display: flex;
-  align-items: center;
-  background: #18181c;
-  border-radius: 12px;
-  padding: 16px 20px;
-  margin-bottom: 18px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-  width: var(--card-width);
-  max-width: 100%;
-  box-sizing: border-box;
-}
   margin:0;
   padding:12px 12px 24px 12px;
   font-family:Segoe UI, Roboto, Helvetica, Arial, sans-serif;
   background:#0b0b0d;
   color:#fff;
 }
-#canvas-container{margin-top:12px;}
-h1{font-size:18px;margin:0 0 8px 0}
 
-/* 대표 교수 카드 스타일 */
-#professor-card {
-  display: flex;
-  align-items: center;
-  background: #18181c;
-  border-radius: 12px;
-  padding: 16px 20px;
-  margin-bottom: 18px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-  max-width: 420px;
+#canvas-container{margin-top:12px;}
+
+/* Shared card sizing: ensures professor and student cards match exactly */
+.student-card{ background:none; box-shadow:none; padding:0; margin-top:32px; margin-bottom:15px; }
+.student-row{ display:flex; gap:24px; overflow:visible; }
+
+.student-profile{
+  display:flex;
+  align-items:center;
+  background:#20202a;
+  border-radius:10px;
+  padding:13px 18px;
+  box-shadow:0 1px 6px rgba(0,0,0,0.10);
+  width: var(--card-width);
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: visible;
 }
-#professor-photo {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-right: 18px;
-  border: 2px solid #444;
+.student-photo{ width:90px; height:90px; border-radius:50%; object-fit:cover; margin-right:18px; border:2px solid #555; }
+.student-info{ display:flex; flex-direction:column; min-width:0; }
+.student-name{ margin:0 0 4px 0; font-size:18px; }
+.student-title{ margin:0 0 4px 0; font-size:14px; color:#b0b0b0; }
+.student-email{ margin:0; font-size:13px; color:#a0a0a0; }
+
+/* Professor card uses same width for exact match */
+#professor-card{
+  display:flex;
+  align-items:center;
+  background:#18181c;
+  border-radius:12px;
+  padding:16px 20px;
+  margin-bottom:18px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.12);
+  width: var(--card-width);
+  max-width:100%;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 800;
 }
-#professor-card h2 {
-  margin: 0 0 4px 0;
-  font-size: 22px;
-}
-#professor-title {
-  margin: 0 0 4px 0;
-  font-size: 15px;
-  color: #b0b0b0;
-}
-#professor-email {
-  margin: 0;
-  font-size: 14px;
-  color: #a0a0a0;
-}
-/* Ensure profile wrappers keep layout stable and buttons overlay */
-.profile-wrap{ position: relative; display:inline-block; }
+#professor-photo{ width:100px; height:100px; border-radius:50%; object-fit:cover; margin-right:18px; border:2px solid #444; }
+#professor-card h2{ margin:0 0 4px 0; font-size:22px; }
+#professor-title{ margin:0 0 4px 0; font-size:15px; color:#b0b0b0; }
+#professor-email{ margin:0; font-size:14px; color:#a0a0a0; }
+
+/* profile wrappers & button overlays */
+.profile-wrap{ position:relative; display:inline-block; }
 .profile-wrap > div[id$="-buttons"]{ position:absolute; left:0; top:100%; display:none; gap:8px; z-index:10; }
-/* Prevent any accidental transform/scale on hover */
-.student-profile, #professor-card { transition: none !important; transform: none !important; }
 #professor-buttons{ display:none; z-index:9999 !important; }
 
-/* responsive card scaling */
-:root{ --card-scale: 1; }
-.profile-wrap, #professor-card {
-  transform-origin: top center;
-  transform: scale(var(--card-scale));
-  transition: transform 180ms ease;
-  will-change: transform;
-}
-
-/* When professor buttons are open, push the student section down so buttons are visible */
-/* Reserve space under professor card so buttons can appear without shifting students */
-/* keep original fixed spacing for professor card */
-
-/* scale inner elements proportionally using the same variable so layout and wrapping adapt */
-#professor-photo{
-  width: 100px;
-  height: 100px;
-  margin-right: 18px;
-  border-width: 2px;
-}
-#professor-card{ padding: 16px 20px; border-radius: 12px; }
-#professor-card h2{ font-size: 22px; }
-
-.student-photo {
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-right: 18px;
-  border: 2px solid #555;
-}
-.student-name { font-size: 18px; }
-.student-title { font-size: 14px; }
-.student-email { font-size: 13px; }
-
-.student-name, .student-title, .student-email{ overflow-wrap: break-word; }
+/* minor responsive/scale support (kept simple) */
+.profile-wrap, #professor-card { transform-origin: top center; transform: scale(var(--card-scale)); transition: transform 180ms ease; will-change: transform; }
 
 /* Fade-in overlay for button groups */
-.buttons-overlay{
-  opacity: 0;
-  transform: translateY(6px);
-  transition: opacity 220ms ease, transform 220ms ease;
-  visibility: hidden;
-  display: flex;
-  gap: 8px;
-}
-.// removed temporary debug rule
-/* professor intro hidden by default; use JS to add/remove the `open` class */
-#professor-intro{ display:none !important; }
-#professor-intro.open{ display:block !important; }
-.buttons-overlay.visible{
-  opacity: 1;
-  transform: translateY(0);
-  visibility: visible;
-}
-.buttons-overlay button{
-  background: #ffd700;
-  color: #23232b;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-/* end */
+.buttons-overlay{ opacity:0; transform:translateY(6px); transition: opacity 220ms ease, transform 220ms ease; visibility:hidden; display:flex; gap:8px; }
+.buttons-overlay.visible{ opacity:1; transform:translateY(0); visibility:visible; }
+.buttons-overlay button{ background:#ffd700; color:#23232b; border:none; padding:8px 12px; border-radius:6px; cursor:pointer; }
+
+/* Professor intro panel (hidden by default) */
+#professor-intro{ display:none; background:#23232b; color:#fff; padding:36px 32px; border-radius:18px; max-width:480px; width:90%; box-shadow:0 4px 32px #0008; text-align:left; margin:32px auto 0 auto; }
+
+/* utility */
+.student-name, .student-title, .student-email{ overflow-wrap: break-word; }
+
+/* end of stylesheet */
