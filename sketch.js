@@ -67,18 +67,12 @@ class MenuNode {
         let overlap = (this.size / 2) - abs(distToWave);
         // if absolute vertical distance is less than radius -> collision
         if (abs(distToWave) < this.size / 2) {
-          // push node out and invert Y velocity for bounce
-          if (distToWave > 0) {
-            // node is below wave, move it below
-            this.pos.y = wy + this.size / 2 + 1;
-            this.vel.y = abs(this.vel.y) * 0.9;
-          } else {
-            // node is above wave, push it above
-            this.pos.y = wy - this.size / 2 - 1;
-            this.vel.y = -abs(this.vel.y) * 0.9;
-          }
+          // Ensure node stays above the wave surface — never sink below.
+          // Always position node just above the wave and give an upward bounce.
+          this.pos.y = wy - this.size / 2 - 1;
+          this.vel.y = -max(1, abs(this.vel.y)) * 0.8; // bounce up with some energy
           // add slight horizontal jitter so node doesn't stick
-          this.vel.x += random(-0.5, 0.5);
+          this.vel.x += random(-0.6, 0.6);
         }
       }
     }
