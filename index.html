@@ -182,13 +182,18 @@
           canvasContainer.style.display = 'none';
         });
         </script>
-        <div class="student-profile">
+        <div class="profile-wrap" style="display:flex; flex-direction:column; align-items:flex-start; position:relative;">
+          <div class="student-profile" id="kim-profile">
             <img src="yhkim.png" alt="김영한 사진" class="student-photo">
             <div class="student-info">
               <h3 class="student-name">김영한</h3>
               <p class="student-title">석사과정</p>
               <p class="student-email">Email: </p>
             </div>
+          </div>
+          <div id="kim-buttons" class="buttons-overlay" style="display:none; position:absolute; left:0; top:100%; margin-top:4px;">
+            <button id="btn-kim-link" type="button">연구업적</button>
+          </div>
         </div>
       <div class="profile-wrap" style="display:flex; flex-direction:column; align-items:flex-start; position:relative;">
         <div class="student-profile" id="boti-profile">
