@@ -1,9 +1,14 @@
 let menus = ['PUBLICATION', 'EDUCATION', 'EXPERIENCE', 'VIDEO', 'GALLERY', 'CONTACT'];
 let nodes = [];
+let mic; // p5.AudioIn
+let micLevel = 0;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   // 메뉴 노드 생성
+  // 마이크 입력 초기화 (사용자가 브라우저에서 권한을 허용해야 작동합니다)
+  mic = new p5.AudioIn();
+  mic.start();
   for (let i = 0; i < menus.length; i++) {
     nodes.push(new MenuNode(random(width), random(height), menus[i]));
   }
@@ -32,7 +37,20 @@ class MenuNode {
   }
 
   update() {
+    // 커서(마우스)를 피하는 동작
+    let mousePos = createVector(constrain(mouseX, 0, width), constrain(mouseY, 0, height));
+    let d = p5.Vector.dist(this.pos, mousePos);
+    const avoidRadius = 120;
+    if (d < avoidRadius) {
+      let away = p5.Vector.sub(this.pos, mousePos);
+      away.setMag((avoidRadius - d) / avoidRadius * 2.5);
+      this.vel.add(away);
+    }
+
+    // 이동과 속도 제한
     this.pos.add(this.vel);
+    this.vel.limit(4);
+
     // 벽에 튕기기
     if (this.pos.x < 50 || this.pos.x > width - 50) this.vel.x *= -1;
     if (this.pos.y < 50 || this.pos.y > height - 50) this.vel.y *= -1;
