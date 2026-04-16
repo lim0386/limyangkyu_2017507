@@ -116,11 +116,14 @@ function drawBackgroundWave() {
 
   stroke(255, 30);
   noFill();
+  wavePoints = [];
   beginShape();
-  for (let x = 0; x < width; x += 10) {
+  for (let x = 0; x < width; x += WAVE_STEP) {
     let base = noise(x * 0.005, frameCount * 0.01) * height * 0.5 + height * 0.25;
     let wave = sin((x * 0.02) + frameCount * 0.06) * sway;
-    vertex(x, base + wave);
+    let y = base + wave;
+    wavePoints.push(y);
+    vertex(x, y);
   }
   endShape();
 }
