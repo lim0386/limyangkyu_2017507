@@ -137,7 +137,7 @@ h1{font-size:18px;margin:0 0 8px 0}
 .student-profile, #professor-card { transition: none !important; transform: none !important; }
 #professor-buttons{ display:none; z-index:9999 !important; }
 
-./* responsive card scaling */
+/* responsive card scaling */
 :root{ --card-scale: 1; --card-base-w: 380px; --card-base-h: 120px; }
 .profile-wrap, #professor-card {
   transform-origin: top center;
