@@ -4,6 +4,7 @@ let mic; // p5.AudioIn
 let micLevel = 0;
 let wavePoints = []; // store wave y-values per x-step for collision
 const WAVE_STEP = 10;
+const GRAVITY = 0.18;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -12,7 +13,10 @@ function setup() {
   mic = new p5.AudioIn();
   mic.start();
   for (let i = 0; i < menus.length; i++) {
-    nodes.push(new MenuNode(random(width), random(height), menus[i]));
+    // spawn nodes near the top so they fall down
+    const sx = random(40, width - 40);
+    const sy = random(-180, 40);
+    nodes.push(new MenuNode(sx, sy, menus[i]));
   }
 }
 
@@ -32,7 +36,8 @@ function draw() {
 class MenuNode {
   constructor(x, y, label) {
     this.pos = createVector(x, y);
-    this.vel = p5.Vector.random2D().mult(0.5);
+    // start with a small downward velocity so nodes fall
+    this.vel = createVector(random(-0.3, 0.3), random(0.6, 1.6));
     this.label = label;
     this.size = 80;
     this.isHovered = false;
@@ -49,9 +54,11 @@ class MenuNode {
       this.vel.add(away);
     }
 
+    // 중력 적용
+    this.vel.y += GRAVITY;
     // 이동과 속도 제한
     this.pos.add(this.vel);
-    this.vel.limit(4);
+    this.vel.limit(6);
 
     // 파형과 충돌 체크: wavePoints에 따라 튕기기
     if (wavePoints && wavePoints.length > 0) {
@@ -64,15 +71,9 @@ class MenuNode {
         // if absolute vertical distance is less than radius -> collision
         if (abs(distToWave) < this.size / 2) {
           // push node out and invert Y velocity for bounce
-          if (distToWave > 0) {
-            // node is below wave, move it below
-            this.pos.y = wy + this.size / 2 + 1;
-            this.vel.y = abs(this.vel.y) * 0.9;
-          } else {
-            // node is above wave, push it above
-            this.pos.y = wy - this.size / 2 - 1;
-            this.vel.y = -abs(this.vel.y) * 0.9;
-          }
+          // for falling nodes we expect they approach from above; always push them up and invert Y velocity
+          this.pos.y = wy - this.size / 2 - 1;
+          this.vel.y = -abs(this.vel.y) * 0.9;
           // add slight horizontal jitter so node doesn't stick
           this.vel.x += random(-0.5, 0.5);
         }
