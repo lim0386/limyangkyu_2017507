@@ -36,8 +36,8 @@ function draw() {
 class MenuNode {
   constructor(x, y, label) {
     this.pos = createVector(x, y);
-    // ensure nodes all initially move downward (small horizontal jitter only)
-    this.vel = createVector(random(-0.18, 0.18), 1.2);
+    // ensure nodes all initially move downward with a strong initial drop
+    this.vel = createVector(random(-0.12, 0.12), random(6, 9));
     this.label = label;
     this.size = 80;
     this.isHovered = false;
@@ -58,7 +58,7 @@ class MenuNode {
     this.vel.y += GRAVITY;
     // 이동과 속도 제한
     this.pos.add(this.vel);
-    this.vel.limit(6);
+    this.vel.limit(12);
 
     // 파형과 충돌 체크: wavePoints에 따라 튕기기
     if (wavePoints && wavePoints.length > 0) {
