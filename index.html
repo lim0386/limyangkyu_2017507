@@ -311,14 +311,15 @@ function showBtns() {
     hideTimeout = null;
   }
   btns.style.display = 'flex';
+  btns.classList.remove('visible');
+  requestAnimationFrame(() => btns.classList.add('visible'));
 }
 function hideBtnsDelayed() {
   if (introVisible) return; // 자기소개가 열려 있으면 버튼을 숨기지 않음
   if (hideTimeout) clearTimeout(hideTimeout);
   hideTimeout = setTimeout(() => {
-    btns.style.display = 'none';
-    intro.style.display = 'none';
-    introVisible = false;
+    btns.classList.remove('visible');
+    setTimeout(() => { btns.style.display = 'none'; intro.style.display = 'none'; introVisible = false; }, 240);
   }, 2000);
 }
 
