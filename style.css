@@ -37,8 +37,7 @@
   margin-bottom: 15px;
   margin-top: 32px;
 }
-.student-row {
-  display: flex;
+:root{ --card-scale: 1; --card-width: 420px; }
   gap: 24px;
   overflow: visible;
 }
@@ -64,6 +63,18 @@
   height: 90px;
   border-radius: 50%;
   object-fit: cover;
+.student-profile {
+  display: flex;
+  align-items: center;
+  background: #20202a;
+  border-radius: 10px;
+  padding: 13px 18px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.10);
+  width: var(--card-width);
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: visible;
+}
   margin-right: 18px;
   border: 2px solid #555;
 }
@@ -88,6 +99,18 @@
 /* 간단한 스타일 */
 html,body{height:100%; overflow-x:hidden; overflow-y:auto;}
 body{
+#professor-card {
+  display: flex;
+  align-items: center;
+  background: #18181c;
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 18px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  width: var(--card-width);
+  max-width: 100%;
+  box-sizing: border-box;
+}
   margin:0;
   padding:12px 12px 24px 12px;
   font-family:Segoe UI, Roboto, Helvetica, Arial, sans-serif;
