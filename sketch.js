@@ -264,23 +264,19 @@ function drawCard(p, x, y, w, h){
   pop();
 }
 
-function drawButtons(p, x, y, w, h){
+function drawButtons(p, x, y, w, h, alpha){
   push();
   let bx = x + 12;
   let by = y + h + 8;
   let bw = 100; let bh = 30; let bgap = 8;
-  // buttons array depends on type
-  let buttons = [];
-  if (p.type === 'professor') buttons = ['자기소개','Google Scholar','YouTube'];
-  else buttons = ['자기소개','연구업적'];
-
+  let buttons = (p.type === 'professor')?['자기소개','Google Scholar','YouTube']:['자기소개','연구업적'];
+  p._buttons = p._buttons || [];
   for(let i=0;i<buttons.length;i++){
     let rx = bx + i * (bw + bgap);
-    fill(255); rect(rx, by, bw, bh, 8);
-    fill(12); textAlign(CENTER, CENTER); textSize(13);
+    fill(255, 215, 0, alpha); // #ffd700
+    noStroke(); rect(rx, by, bw, bh, 8);
+    fill(35, 35, 35, alpha); textAlign(CENTER, CENTER); textSize(13);
     text(buttons[i], rx + bw/2, by + bh/2);
-    // store button geometry for click handling
-    p._buttons = p._buttons || [];
     p._buttons[i] = { x: rx, y: by, w: bw, h: bh, label: buttons[i] };
   }
   pop();
