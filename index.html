@@ -290,6 +290,23 @@
 </body>
 </html>
 <script>
+// Responsive card scaling: adjust --card-scale based on viewport width
+;(function(){
+  function updateScale(){
+    const w = window.innerWidth;
+    // baseWidth controls nominal size; adjust min/max as desired
+    const base = 1200;
+    const min = 0.6; const max = 1.4;
+    let s = w / base;
+    s = Math.max(min, Math.min(max, s));
+    document.documentElement.style.setProperty('--card-scale', s.toFixed(3));
+  }
+  window.addEventListener('resize', updateScale);
+  window.addEventListener('orientationchange', updateScale);
+  updateScale();
+})();
+</script>
+<script>
 // 임양규 카드 마우스 오버 시 버튼 표시
 const profCard = document.getElementById('professor-card');
 const btns = document.getElementById('professor-buttons');
