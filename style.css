@@ -107,7 +107,9 @@ h1{font-size:18px;margin:0 0 8px 0}
   padding: 16px 20px;
   margin-bottom: 18px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-  max-width: 420px;
+  width: var(--card-base-w);
+  min-height: var(--card-base-h);
+  box-sizing: border-box;
 }
 #professor-photo {
   width: 100px;
