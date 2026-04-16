@@ -29,6 +29,35 @@ function draw() {
     node.display();
     node.checkHover(mouseX, mouseY);
   }
+  // separate nodes so they don't overlap visually
+  separateNodes();
+}
+
+function separateNodes(){
+  for(let i=0;i<nodes.length;i++){
+    for(let j=i+1;j<nodes.length;j++){
+      let a = nodes[i];
+      let b = nodes[j];
+      let minDist = (a.size + b.size)/2 + 6; // small gap
+      let d = p5.Vector.dist(a.pos, b.pos);
+      if(d < minDist){
+        if(d < 0.001){
+          // avoid exact overlap
+          let jitter = createVector(random(-1,1), random(-1,1)).mult(2);
+          a.pos.add(jitter);
+          d = p5.Vector.dist(a.pos, b.pos);
+        }
+        let overlap = minDist - d;
+        let dir = p5.Vector.sub(a.pos, b.pos).normalize();
+        let push = dir.mult(overlap * 0.5);
+        a.pos.add(push);
+        b.pos.sub(push);
+        // damp/adjust velocities to reduce future overlap
+        a.vel.add(push.copy().mult(0.08));
+        b.vel.sub(push.copy().mult(0.08));
+      }
+    }
+  }
 }
 
 class MenuNode {
