@@ -209,49 +209,56 @@ function drawCard(p, x, y, w, h){
   p._x = x; p._y = y; p._w = w; p._h = h;
 
   push();
-  // card background
+  // drop shadow
   noStroke();
-  fill(36,36,43, 220);
+  fill(0,0,0,100);
+  rect(x+4, y+6, w, h, 12);
+  // card background
+  if (p.type === 'professor') fill(24,24,28, 255);
+  else fill(32,32,42, 255);
   rect(x, y, w, h, 12);
 
-  // photo circle
-  let imgSize = h - 20;
+  // photo area
+  let imgSize = (p.type==='professor')?100:90;
   let ix = x + 12; let iy = y + (h - imgSize)/2;
+  fill(48); rect(ix, iy, imgSize, imgSize, imgSize*0.2);
   if (p.img) {
-    push();
-    fill(255);
-    rect(ix, iy, imgSize, imgSize, 10);
     imageMode(CORNER);
     image(p.img, ix, iy, imgSize, imgSize);
-    pop();
   } else {
-    fill(80);
-    rect(ix, iy, imgSize, imgSize, 10);
-    fill(180); textAlign(CENTER, CENTER); textSize(14);
+    fill(120); textAlign(CENTER, CENTER); textSize(14);
     text('No Image', ix + imgSize/2, iy + imgSize/2);
   }
+  // photo border
+  noFill(); stroke(80); strokeWeight(2); rect(ix, iy, imgSize, imgSize, imgSize*0.2);
+  noStroke();
 
   // text
   fill(255); textAlign(LEFT, TOP);
   let tx = ix + imgSize + 12;
   let ty = y + 12;
-  textSize(18); text(p.name, tx, ty);
-  textSize(12); fill(200); text(p.title, tx, ty + 26);
-  textSize(11); fill(170); text(p.email, tx, ty + 46);
+  if (p.type === 'professor') { textSize(22); }
+  else { textSize(18); }
+  text(p.name, tx, ty);
+  textSize(14); fill(176); text(p.title, tx, ty + ((p.type==='professor')?30:26));
+  textSize(13); fill(150); text(p.email, tx, ty + ((p.type==='professor')?56:50));
 
-  // hover detection
+  // hover detection -> extend expiry
   if (mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h){
     hoverIndex = profiles.indexOf(p);
-    // extend button visibility by 2s while hovered
-    visibleButtons[p.id] = millis() + 2000;
+    if (!visibleButtons[p.id]) visibleButtons[p.id] = { expiry: millis() + 2000, alpha: 0 };
+    else visibleButtons[p.id].expiry = millis() + 2000;
   } else {
-    // keep whatever expiry exists
-    if (!visibleButtons[p.id]) visibleButtons[p.id] = 0;
+    if (!visibleButtons[p.id]) visibleButtons[p.id] = { expiry: 0, alpha: 0 };
   }
 
-  // draw buttons if visible
-  if (visibleButtons[p.id] && visibleButtons[p.id] > millis()){
-    drawButtons(p, x, y, w, h);
+  // update alpha for this card's buttons (fade in/out)
+  let vb = visibleButtons[p.id];
+  if (vb) {
+    let target = (vb.expiry > millis())?255:0;
+    if (vb.alpha < target) vb.alpha = min(255, vb.alpha + 28);
+    if (vb.alpha > target) vb.alpha = max(0, vb.alpha - 28);
+    if (vb.alpha > 5) drawButtons(p, x, y, w, h, vb.alpha);
   }
 
   pop();
