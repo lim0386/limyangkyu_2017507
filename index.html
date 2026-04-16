@@ -174,10 +174,8 @@
             </div>
             <button id=\"btn-moon-intro-close\" style=\"margin-top:24px; padding:8px 24px; border:none; border-radius:6px; background:#ffd700; color:#23232b; font-weight:bold; font-size:16px; cursor:pointer;\">Close</button>
           `;
-          // 항상 p5js sketch 아래에만 나오게 위치 이동
-          document.getElementById('canvas-container').after(moonIntroDiv);
+          // 화면 스크롤 없이 현재 위치에 바로 표시
           moonIntroDiv.style.display = 'block';
-          moonIntroDiv.scrollIntoView({behavior: 'smooth', block: 'start'});
           document.getElementById('btn-moon-intro-close').onclick = () => {
             moonIntroDiv.style.display = 'none';
           };
