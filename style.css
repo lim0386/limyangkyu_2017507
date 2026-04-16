@@ -134,9 +134,10 @@ h1{font-size:18px;margin:0 0 8px 0}
 /* responsive card scaling */
 :root{ --card-scale: 1; }
 .profile-wrap, #professor-card {
-  transform-origin: top left;
+  transform-origin: top center;
   transform: scale(var(--card-scale));
   transition: transform 180ms ease;
+  will-change: transform;
 }
 
 /* Fade-in overlay for button groups */
