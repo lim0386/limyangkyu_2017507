@@ -61,11 +61,14 @@
               shimHideTimeout = null;
             }
             shimBtns.style.display = 'flex';
+            shimBtns.classList.remove('visible');
+            requestAnimationFrame(() => shimBtns.classList.add('visible'));
           }
           function hideShimBtnsDelayed() {
             if (shimHideTimeout) clearTimeout(shimHideTimeout);
             shimHideTimeout = setTimeout(() => {
-              shimBtns.style.display = 'none';
+              shimBtns.classList.remove('visible');
+              setTimeout(() => { shimBtns.style.display = 'none'; }, 240);
             }, 2000);
           }
           shimProfile.addEventListener('mouseenter', showShimBtns);
