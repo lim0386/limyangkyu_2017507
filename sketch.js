@@ -118,10 +118,15 @@ function drawBackgroundWave() {
   stroke(255, 30);
   noFill();
   wavePoints = [];
+  // use a sinusoidal phase shift so the wave moves back-and-forth instead of continuously translating
+  let t = frameCount * 0.03;
+  let phaseShift = sin(t) * 2.4; // controls left/right oscillation amount
   beginShape();
   for (let x = 0; x < width; x += WAVE_STEP) {
-    let base = noise(x * 0.005, frameCount * 0.01) * height * 0.5 + height * 0.25;
-    let wave = sin((x * 0.02) + frameCount * 0.06) * sway;
+    // use a slowly oscillating noise input (not a linear time scroll) for vertical texture
+    let n = noise(x * 0.005, sin(frameCount * 0.006) * 0.5 + 0.5);
+    let base = n * height * 0.5 + height * 0.25;
+    let wave = sin((x * 0.02) + phaseShift) * sway;
     let y = base + wave;
     wavePoints.push(y);
     vertex(x, y);
