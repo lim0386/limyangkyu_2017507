@@ -157,7 +157,7 @@
           const introContent = document.getElementById('professor-intro-content');
           const canvasContainer = document.getElementById('canvas-container');
           introContent.innerHTML = content;
-          introDiv.style.display = 'block';
+          introDiv.classList.add('open');
           canvasContainer.style.display = 'none';
         });
         </script>
@@ -333,8 +333,8 @@ btnIntro.addEventListener('click', () => {
   const introContent = document.getElementById('professor-intro-content');
   const canvasContainer = document.getElementById('canvas-container');
   if (introVisible) {
-    if (profCard && profCard.parentElement) profCard.parentElement.classList.add('buttons-open');
-    introDiv.style.display = 'block';
+  if (profCard && profCard.parentElement) profCard.parentElement.classList.add('buttons-open');
+  introDiv.classList.add('open');
     canvasContainer.style.display = 'none';
     introContent.innerHTML = `
   <div style="padding-left:18px;">
@@ -401,13 +401,13 @@ btnIntro.addEventListener('click', () => {
   <li>TV: KBS World, SBS, Weimar (Belvedere Sall), Seoul (KBS Hall), and Ulsan (Hyundai:)HallLocation</li>
   </div>`;
   } else {
-    introDiv.style.display = 'none';
+    introDiv.classList.remove('open');
     canvasContainer.style.display = 'block';
   }
 });
 
 document.getElementById('btn-intro-close').addEventListener('click', () => {
-  document.getElementById('professor-intro').style.display = 'none';
+  document.getElementById('professor-intro').classList.remove('open');
   document.getElementById('canvas-container').style.display = 'block';
   introVisible = false;
 });
