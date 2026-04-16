@@ -150,10 +150,8 @@ h1{font-size:18px;margin:0 0 8px 0}
 }
 
 /* When professor buttons are open, push the student section down so buttons are visible */
-.profile-wrap.buttons-open + .student-card {
-  margin-top: calc(56px * var(--card-scale));
-  transition: margin-top 180ms ease;
-}
+/* Reserve space under professor card so buttons can appear without shifting students */
+#professor-card { margin-bottom: calc(56px * var(--card-scale)); }
 
 /* scale inner elements proportionally using the same variable so layout and wrapping adapt */
 .student-profile{ min-width: calc(220px * var(--card-scale)); }
