@@ -129,28 +129,7 @@
         </div>
       </div>
     <div id="moon-intro" style="display:none; background:#23232b; color:#fff; padding:36px 32px; border-radius:18px; max-width:480px; width:90%; box-shadow:0 4px 32px #0008; text-align:left; margin:18px auto 18px auto;"></div>
-        <script>
-        // 문민혜 카드 자기소개 버튼 표시 및 동작
-        const moonProfile = document.getElementById('moon-profile');
-        const moonBtns = document.getElementById('moon-buttons');
-        const btnMoonIntro = document.getElementById('btn-moon-intro');
-        const moonIntroDiv = document.getElementById('moon-intro');
-        const moonIntroContent = document.getElementById('moon-intro-content');
-        const btnMoonIntroClose = document.getElementById('btn-moon-intro-close');
-        const canvasContainer = document.getElementById('canvas-container');
-        let moonHideTimeout = null;
-
-        function showMoonBtns() {
-          if (moonHideTimeout) {
-            clearTimeout(moonHideTimeout);
-            moonHideTimeout = null;
-          }
-          moonBtns.style.display = 'flex';
-          moonBtns.classList.remove('visible');
-          requestAnimationFrame(() => moonBtns.classList.add('visible'));
-        }
-        function hideMoonBtnsDelayed() {
-          if (moonHideTimeout) clearTimeout(moonHideTimeout);
+      
           moonHideTimeout = setTimeout(() => {
             moonBtns.classList.remove('visible');
             setTimeout(() => { moonBtns.style.display = 'none'; }, 240);
