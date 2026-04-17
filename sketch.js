@@ -28,7 +28,7 @@ function preload(){
 }
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  createCanvas(windowWidth, windowHeight).parent('canvas-container');
   mic = new p5.AudioIn();
   mic.start();
 
