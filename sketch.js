@@ -28,7 +28,7 @@ function preload(){
 }
 
 // draw an image clipped to a circle of given size at (x,y)
-function drawCircularImage(img, x, y, size){
+function drawCircularImage(img, x, y, size, crop){
   push();
   // use canvas clipping so the image itself is drawn circular
   const ctx = drawingContext;
@@ -38,7 +38,19 @@ function drawCircularImage(img, x, y, size){
   ctx.closePath();
   ctx.clip();
   imageMode(CORNER);
-  if (img) image(img, x, y, size, size);
+  if (img) {
+    if (crop && typeof crop.sx === 'number'){
+      // draw with source cropping: image(img, sx, sy, sw, sh, dx, dy, dw, dh)
+      let sx = crop.sx, sy = crop.sy, sw = crop.sw, sh = crop.sh;
+      // ensure integer bounds
+      sx = max(0, sx); sy = max(0, sy);
+      sw = max(1, min(img.width - sx, sw));
+      sh = max(1, min(img.height - sy, sh));
+      image(img, sx, sy, sw, sh, x, y, size, size);
+    } else {
+      image(img, x, y, size, size);
+    }
+  }
   else {
     noStroke(); fill(120); rect(x, y, size, size);
     fill(255); textAlign(CENTER, CENTER); textSize(12);
@@ -244,7 +256,17 @@ function drawCard(p, x, y, w, h){
   let ix = x + 12; let iy = y + (h - imgSize)/2;
   let cx = ix + imgSize/2; let cy = iy + imgSize/2;
   fill(48); noStroke(); ellipse(cx, cy, imgSize, imgSize);
-  drawCircularImage(p.img, ix, iy, imgSize);
+  // for specific profiles we can pass a crop region so the important area is shown
+  if (p.id === 'kim' && p.img && p.img.width && p.img.height) {
+    // tuned crop values to focus on the desired area (adjustable)
+    let sx = Math.floor(p.img.width * 0.18);
+    let sy = Math.floor(p.img.height * 0.12);
+    let sw = Math.floor(p.img.width * 0.64);
+    let sh = Math.floor(p.img.height * 0.64);
+    drawCircularImage(p.img, ix, iy, imgSize, { sx, sy, sw, sh });
+  } else {
+    drawCircularImage(p.img, ix, iy, imgSize);
+  }
   // photo border (circle)
   noFill(); stroke(80); strokeWeight(2); ellipse(cx, cy, imgSize, imgSize);
   noStroke();
