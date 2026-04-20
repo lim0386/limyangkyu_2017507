@@ -378,6 +378,11 @@ function getRequiredCanvasHeight(){
     return m.panelY + m.panelH + 24;
   }
 
+  if (currentPage === 'publications') {
+    const m = getPublicationsPanelMetrics();
+    return m.panelY + m.panelH + 40;
+  }
+
   if (currentPage !== 'members') {
     return max(320, windowHeight - getHeaderHeight() - 6);
   }
@@ -541,16 +546,49 @@ function getContactPanelMetrics(){
   const availableH = max(280, windowHeight - getHeaderHeight() - 70);
   
   let mapH = constrain(availableH - 160, 180, 300);
+  let imgDisplayH = mapH;
   
   // Adjust mapH based on contact image aspect ratio at 48% width
   if (images.contactImg && images.contactImg.width && images.contactImg.height) {
     const imgW = (panelW - 48) * 0.528;
     const imgAspectRatio = images.contactImg.width / images.contactImg.height;
-    mapH = imgW / imgAspectRatio;
+    imgDisplayH = imgW / imgAspectRatio;
+    mapH = imgDisplayH;
   }
   
-  const panelH = mapH + 160;
-  return { panelW, panelX, panelY, mapH, panelH };
+  const textTop = 79 + imgDisplayH + 20;
+  const textBlockH = 13 * 3 + 6;
+  const bottomPad = 12;
+  const panelH = textTop + textBlockH + bottomPad - panelY;
+  return { panelW, panelX, panelY, mapH, imgDisplayH, panelH };
+}
+
+function getPublicationsPanelMetrics(){
+  const bounds = getContentBounds();
+  const panelW = min(bounds.width - 10, 920);
+  const panelX = bounds.left + (bounds.width - panelW) / 2;
+  const panelY = 24;
+  const contentW = panelW - 48;
+  const items = PUBLICATIONS.slice().sort((a, b) => Number(b.year) - Number(a.year));
+  const isCompact = contentW < 640;
+  const titleSize = isCompact ? 11.5 : 12.5;
+  const yearSize = isCompact ? 14 : 16;
+  const rowGap = isCompact ? 14 : 17;
+  const yearGap = isCompact ? 25 : 30;
+
+  let contentH = 0;
+  let currentYear = null;
+
+  for (const item of items) {
+    if (item.year !== currentYear) {
+      currentYear = item.year;
+      contentH += yearSize + (yearGap + 3);
+    }
+    contentH += titleSize + rowGap;
+  }
+
+  const panelH = 97 + contentH + 60;
+  return { panelW, panelX, panelY, panelH };
 }
 
 // draw an image clipped to a circle of given size at (x,y)
@@ -701,6 +739,7 @@ function drawContactPage(){
   const panelX = m.panelX;
   const panelY = m.panelY;
   const mapH = m.mapH;
+  const imgDisplayHMetric = m.imgDisplayH;
   const panelH = m.panelH;
 
   noStroke();
@@ -717,7 +756,7 @@ function drawContactPage(){
   const mapY = panelY + 79;
   const imgX = panelX + (panelW - imgDisplayW) / 2;
 
-  let imgDisplayH = mapH;
+  let imgDisplayH = imgDisplayHMetric;
   // Display contact image with aspect ratio preserved
   if (images.contactImg) {
     if (images.contactImg.width && images.contactImg.height) {
@@ -739,14 +778,15 @@ function drawContactPage(){
 }
 
 function drawPublicationsPage(){
-  const bounds = getContentBounds();
-  const panelW = min(bounds.width - 10, 920);
-  const panelX = bounds.left + (bounds.width - panelW) / 2;
-  const panelY = 24;
-  const panelH = min(height - 94, 680);
+  const m = getPublicationsPanelMetrics();
+  const panelW = m.panelW;
+  const panelX = m.panelX;
+  const panelY = m.panelY;
+  const panelH = m.panelH;
   publicationScholarRect = null;
 
   noStroke();
+  rectMode(CORNER);
   fill(240, 231, 213, 242);
   rect(panelX, panelY, panelW, panelH, 14);
 
@@ -756,13 +796,7 @@ function drawPublicationsPage(){
   textSize(32);
   text('Publications', panelX + 24, panelY + 20);
 
-  setCanvasFont('semiBold');
-  textAlign(LEFT, TOP);
-  textSize(17);
-  fill(22, 21, 29, 220);
-  text('임양규 교수 논문 목록', panelX + 24, panelY + 74);
-
-  drawPublicationEntries(panelX + 24, panelY + 112, panelW - 48, panelH - 150);
+  drawPublicationEntries(panelX + 24, panelY + 97, panelW - 48, panelH - 120);
 }
 
 function drawPublicationEntries(x, y, w, h){
