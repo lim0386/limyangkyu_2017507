@@ -5,9 +5,16 @@ let micLevel = 0;
 let wavePoints = []; // store wave y-values per x-step for collision
 const WAVE_STEP = 10;
 const GRAVITY = 0.25;
+const THEME = {
+  midnight: '#122C4F',
+  pearl: '#FBF9E4',
+  noir: '#000000',
+  ocean: '#5B88B2'
+};
 
 // UI data
 let images = {};
+let uiFonts = {};
 let profiles = [];
 let cardW = 420;
 let cardH = 140;
@@ -19,12 +26,68 @@ let hoverIndex = -1;
 let visibleButtons = {};
 let introOpen = false;
 let introContent = '';
+let pageHeader = null;
+
+function ensurePageHeader(){
+  if (pageHeader) return;
+  if (!document.getElementById('sega-font-faces')) {
+    const fontStyle = document.createElement('style');
+    fontStyle.id = 'sega-font-faces';
+    fontStyle.textContent = `
+      @font-face { font-family: 'SegaLight'; src: url('fonts/3Light.ttf') format('truetype'); font-weight: 300; font-style: normal; }
+      @font-face { font-family: 'SegaRegular'; src: url('fonts/4Regular.ttf') format('truetype'); font-weight: 400; font-style: normal; }
+      @font-face { font-family: 'SegaSemiBold'; src: url('fonts/6SemiBold.ttf') format('truetype'); font-weight: 600; font-style: normal; }
+      @font-face { font-family: 'SegaExtraBold'; src: url('fonts/8ExtraBold.ttf') format('truetype'); font-weight: 800; font-style: normal; }
+    `;
+    document.head.appendChild(fontStyle);
+  }
+
+  const canvasContainer = document.getElementById('canvas-container');
+  pageHeader = document.createElement('header');
+  pageHeader.id = 'site-header';
+  pageHeader.innerHTML = '<h1>Sound Exploration &amp; Generative Arts Lab.</h1>';
+  pageHeader.style.position = 'relative';
+  pageHeader.style.zIndex = '3';
+  pageHeader.style.padding = '16px 24px 4px 24px';
+
+  const title = pageHeader.querySelector('h1');
+  title.style.margin = '0';
+  title.style.fontSize = 'clamp(1.6rem, 2.8vw, 3rem)';
+  title.style.lineHeight = '1.05';
+  title.style.letterSpacing = '-0.03em';
+  title.style.fontFamily = "SegaExtraBold, 'Segoe UI', sans-serif";
+  title.style.fontWeight = '700';
+  title.style.color = THEME.pearl;
+  title.style.textShadow = '0 8px 24px rgba(0,0,0,0.5)';
+
+  if (canvasContainer && canvasContainer.parentNode) {
+    canvasContainer.parentNode.insertBefore(pageHeader, canvasContainer);
+  } else {
+    document.body.insertBefore(pageHeader, document.body.firstChild);
+  }
+}
 
 function preload(){
+  uiFonts.light = loadFont('fonts/3Light.ttf', ()=>{}, ()=>{ uiFonts.light = null; });
+  uiFonts.regular = loadFont('fonts/4Regular.ttf', ()=>{}, ()=>{ uiFonts.regular = null; });
+  uiFonts.semiBold = loadFont('fonts/6SemiBold.ttf', ()=>{}, ()=>{ uiFonts.semiBold = null; });
+  uiFonts.extraBold = loadFont('fonts/8ExtraBold.ttf', ()=>{}, ()=>{ uiFonts.extraBold = null; });
+
   const files = { yklim: 'yklim.jpg', shim: 'bkshim.jpg', moon: 'mhmoon2.png', kim: 'yhkim.png', boti: 'boti.png', seo: 'shseo.jpg' };
   for(let k in files){
     images[k] = loadImage(files[k], ()=>{}, ()=>{ images[k]=null; });
   }
+}
+
+function setCanvasFont(weight){
+  let fontObj = null;
+  if (weight === 'light') fontObj = uiFonts.light;
+  else if (weight === 'semiBold') fontObj = uiFonts.semiBold;
+  else if (weight === 'extraBold') fontObj = uiFonts.extraBold;
+  else fontObj = uiFonts.regular;
+
+  if (fontObj) textFont(fontObj);
+  else textFont('sans-serif');
 }
 
 // draw an image clipped to a circle of given size at (x,y)
@@ -50,7 +113,7 @@ function drawCircularImage(img, x, y, size, crop){
       if (sw < 20 || sh < 20) {
         image(img, x, y, size, size);
       } else {
-        image(img, sx, sy, sw, sh, x, y, size, size);
+        image(img, x, y, size, size, sx, sy, sw, sh);
       }
     } else {
       image(img, x, y, size, size);
@@ -65,7 +128,25 @@ function drawCircularImage(img, x, y, size, crop){
   pop();
 }
 
+function buildSquareCoverCrop(img, biasX, biasY, scaleFactor){
+  if (!img || !img.width || !img.height) return null;
+  const sideBase = min(img.width, img.height);
+  const side = floor(sideBase * (scaleFactor || 1));
+  const clampedSide = constrain(side, 1, sideBase);
+  const bx = typeof biasX === 'number' ? biasX : 0.5;
+  const by = typeof biasY === 'number' ? biasY : 0.5;
+  const sx = floor((img.width - clampedSide) * bx);
+  const sy = floor((img.height - clampedSide) * by);
+  return {
+    sx: constrain(sx, 0, img.width - clampedSide),
+    sy: constrain(sy, 0, img.height - clampedSide),
+    sw: clampedSide,
+    sh: clampedSide
+  };
+}
+
 function setup() {
+  ensurePageHeader();
   createCanvas(windowWidth, windowHeight).parent('canvas-container');
   mic = new p5.AudioIn();
   mic.start();
@@ -85,17 +166,17 @@ function setup() {
 }
 
 function draw() {
-  background(15, 15, 25);
+  background(THEME.noir);
 
   drawBackgroundWave();
-
-  layoutCards();
 
   for (let node of nodes) {
     node.update();
     node.display();
   }
   separateNodes();
+
+  layoutCards();
 
   if (introOpen) drawIntroPanel();
 }
@@ -178,16 +259,17 @@ class MenuNode {
   }
 
   display() {
-    stroke(255, 150);
+    stroke(251, 249, 228, 150);
     noFill();
     ellipse(this.pos.x, this.pos.y, this.size);
     if (this.isHovered) {
-      fill(0, 150, 255, 40);
+      fill(91, 136, 178, 55);
       ellipse(this.pos.x, this.pos.y, this.size * 1.2);
     }
     textAlign(CENTER, CENTER);
-    fill(255);
+    fill(THEME.pearl);
     noStroke();
+    setCanvasFont('semiBold');
     text(this.label, this.pos.x, this.pos.y);
   }
 }
@@ -197,7 +279,7 @@ function drawBackgroundWave() {
   let amp = constrain(map(micLevel, 0, 0.3, 0, 1), 0, 1);
   let sway = amp * 700;
 
-  stroke(255, 30);
+  stroke(91, 136, 178, 85);
   noFill();
   wavePoints = [];
   beginShape();
@@ -216,17 +298,16 @@ function layoutCards(){
   cardW = min(420, width - padding*2);
   cardH = 140; // fixed to match original CSS
   padding = 24;
+  const buttonReserve = 46;
+  const rowGap = 14;
+  const rowHeight = cardH + buttonReserve + rowGap;
 
   // compute positions
   let px = padding;
   let py = padding + 20;
 
-  // If professor's buttons visible, shift students down so buttons don't overlap
-  let profVisible = visibleButtons['prof'] && visibleButtons['prof'].expiry > millis();
-  let extraShift = profVisible ? 44 : 0;
-
   // students row below
-  let startY = py + cardH + 28 + extraShift;
+  let startY = py + cardH + buttonReserve + rowGap;
   let gap = 18;
   let cols = floor((width - padding*2 + gap) / (cardW + gap));
   cols = max(1, cols);
@@ -235,7 +316,7 @@ function layoutCards(){
   for(let i=1;i<profiles.length;i++){
     drawCard(profiles[i], x, y, cardW, cardH);
     x += cardW + gap;
-    if (x + cardW > width - padding){ x = padding; y += cardH + gap; }
+    if (x + cardW > width - padding){ x = padding; y += rowHeight; }
   }
 
   // draw professor last so its buttons render on top
@@ -249,77 +330,67 @@ function drawCard(p, x, y, w, h){
   push();
   // drop shadow
   noStroke();
-  fill(0,0,0,100);
+  if (p.type === 'professor') fill(251, 249, 228, 95);
+  else fill(18, 44, 79, 130);
   rect(x+4, y+6, w, h, 12);
   // card background
-  if (p.type === 'professor') fill(24,24,28, 255);
-  else fill(32,32,42, 255);
+  if (p.type === 'professor') fill(251, 249, 228, 248);
+  else fill(18, 44, 79, 240);
   rect(x, y, w, h, 12);
 
   // photo area (circular)
   let imgSize = (p.type==='professor')?100:90;
-  let ix = x + 12; let iy = y + (h - imgSize)/2;
+  let ix = x + 18; let iy = y + (h - imgSize)/2;
   let cx = ix + imgSize/2; let cy = iy + imgSize/2;
-  fill(48); noStroke(); ellipse(cx, cy, imgSize, imgSize);
+  fill(91, 136, 178, 90); noStroke(); ellipse(cx, cy, imgSize, imgSize);
   // for specific profiles we can pass a crop region so the important area is shown
-  // 김영한은 멀리 찍힌 사진이라 얼굴이 작음 -> 중앙 위쪽을 잘라 확대해서 표시
+  // 김영한은 기존 대비 20% 더 타이트하게, 얼굴 위치(약간 오른쪽/아래)에 맞춘 정사각형 크롭 사용
   if (p.id === 'kim' && p.img && p.img.width && p.img.height) {
-    // compute once and cache optimal crop for kim to avoid per-frame cost
     if (!p._kimCrop) {
-      // candidate zooms and vertical shifts to try
-      const zooms = [0.28, 0.32, 0.38, 0.5];
-      const vy = [0.15, 0.25, 0.35];
-      let best = null; let bestScore = -Infinity;
-      for (let z of zooms) {
-        let sw = Math.floor(p.img.width * z);
-        let sh = Math.floor(p.img.height * z);
-        let sx = Math.floor((p.img.width - sw) / 2);
-        for (let vf of vy) {
-          let sy = Math.floor((p.img.height - sh) * vf);
-          sx = Math.max(0, sx); sy = Math.max(0, sy);
-          // score this crop by sampling a grid of pixels and summing luminance
-          let score = 0; let samples = 0;
-          const stepX = Math.max(1, Math.floor(sw / 10));
-          const stepY = Math.max(1, Math.floor(sh / 10));
-          for (let oy = sy; oy < sy + sh; oy += stepY) {
-            for (let ox = sx; ox < sx + sw; ox += stepX) {
-              const c = p.img.get(ox, oy);
-              if (c) {
-                const r = c[0], g = c[1], b = c[2];
-                const lum = 0.2126*r + 0.7152*g + 0.0722*b;
-                score += lum;
-                samples++;
-              }
-            }
-          }
-          if (samples > 0) score = score / samples;
-          if (score > bestScore) { bestScore = score; best = { sx, sy, sw, sh }; }
-        }
-      }
-      // if nothing found, fall back to center crop
-      if (!best) {
-        const z = 0.32; let sw = Math.floor(p.img.width*z); let sh = Math.floor(p.img.height*z);
-        best = { sx: Math.floor((p.img.width-sw)/2), sy: Math.floor((p.img.height-sh)/3), sw, sh };
-      }
-      p._kimCrop = best;
+      p._kimCrop = buildSquareCoverCrop(p.img, 0.58, 0.28, 0.67);
     }
     drawCircularImage(p.img, ix, iy, imgSize, p._kimCrop);
   } else {
-    drawCircularImage(p.img, ix, iy, imgSize);
+    if (!p._squareCrop) {
+      let biasX = 0.5;
+      let biasY = 0.5;
+      let scaleFactor = 1;
+      if (p.id === 'moon') {
+        scaleFactor = 0.95;
+        biasY = 0.43;
+      } else if (p.id === 'seo') {
+        biasY = 0.43;
+      }
+      p._squareCrop = buildSquareCoverCrop(p.img, biasX, biasY, scaleFactor);
+    }
+    drawCircularImage(p.img, ix, iy, imgSize, p._squareCrop);
   }
   // photo border (circle)
-  noFill(); stroke(80); strokeWeight(2); ellipse(cx, cy, imgSize, imgSize);
+  if (p.type === 'professor') stroke(18, 44, 79, 120);
+  else stroke(251, 249, 228, 90);
+  noFill(); strokeWeight(2); ellipse(cx, cy, imgSize, imgSize);
   noStroke();
 
   // text
-  fill(255); textAlign(LEFT, TOP);
-  let tx = ix + imgSize + 12;
-  let ty = y + 12;
+  textAlign(LEFT, TOP);
+  let tx = ix + imgSize + 24;
+  let ty = y + 20;
+  setCanvasFont('extraBold');
+  if (p.type === 'professor') fill(THEME.midnight);
+  else fill(THEME.pearl);
   if (p.type === 'professor') { textSize(22); }
   else { textSize(18); }
   text(p.name, tx, ty);
-  textSize(14); fill(176); text(p.title, tx, ty + ((p.type==='professor')?30:26));
-  textSize(13); fill(150); text(p.email, tx, ty + ((p.type==='professor')?56:50));
+  setCanvasFont('regular');
+  textSize(14);
+  if (p.type === 'professor') fill(27, 59, 95, 210);
+  else fill(205, 221, 238, 235);
+  text(p.title, tx, ty + ((p.type==='professor')?30:26));
+  setCanvasFont('light');
+  textSize(13);
+  if (p.type === 'professor') fill(50, 80, 112, 190);
+  else fill(170, 196, 222, 230);
+  text(p.email, tx, ty + ((p.type==='professor')?56:50));
 
   // hover detection -> extend expiry
   if (mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h){
@@ -345,15 +416,19 @@ function drawCard(p, x, y, w, h){
 function drawButtons(p, x, y, w, h, alpha){
   push();
   let bx = x + 12;
-  let by = y + h + 8;
+  let by = y + h + 10;
   let bw = 100; let bh = 30; let bgap = 8;
   let buttons = (p.type === 'professor')?['자기소개','Google Scholar','YouTube']:['자기소개','연구업적'];
   p._buttons = p._buttons || [];
   for(let i=0;i<buttons.length;i++){
     let rx = bx + i * (bw + bgap);
-    fill(255, 215, 0, alpha); // #ffd700
-    noStroke(); rect(rx, by, bw, bh, 8);
-    fill(35, 35, 35, alpha); textAlign(CENTER, CENTER); textSize(13);
+    fill(251, 249, 228, alpha);
+    stroke(91, 136, 178, alpha);
+    strokeWeight(1);
+    rect(rx, by, bw, bh, 8);
+    noStroke();
+    setCanvasFont('semiBold');
+    fill(18, 44, 79, alpha); textAlign(CENTER, CENTER); textSize(13);
     text(buttons[i], rx + bw/2, by + bh/2);
     p._buttons[i] = { x: rx, y: by, w: bw, h: bh, label: buttons[i] };
   }
@@ -365,12 +440,14 @@ function drawIntroPanel(){
   let W = min(680, width - 80);
   let H = min(420, height - 160);
   let x = (width - W)/2; let y = (height - H)/2;
-  fill(36,36,43, 240); rect(x, y, W, H, 14);
-  fill(255); textSize(16); textAlign(LEFT, TOP);
+  fill(18, 44, 79, 238); rect(x, y, W, H, 14);
+  setCanvasFont('regular');
+  fill(THEME.pearl); textSize(16); textAlign(LEFT, TOP);
   text(introContent, x + 24, y + 24, W - 48, H - 80);
   // close button
-  let cx = x + W - 96; let cy = y + H - 56; fill(255); rect(cx, cy, 72, 36, 8);
-  fill(12); textAlign(CENTER, CENTER); text('닫기', cx + 36, cy + 18);
+  let cx = x + W - 96; let cy = y + H - 56; fill(251, 249, 228); rect(cx, cy, 72, 36, 8);
+  setCanvasFont('semiBold');
+  fill(18, 44, 79); textAlign(CENTER, CENTER); text('닫기', cx + 36, cy + 18);
   pop();
 }
 
