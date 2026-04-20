@@ -34,8 +34,27 @@ let closeButtonRect = null;
 let currentPage = 'home';
 let pageHeader = null;
 let marginParticles = [];
+let publicationScholarRect = null;
 
 const CONTACT_MAP_URL = 'https://tile.openstreetmap.org/15/28346/13066.png';
+const PUBLICATIONS = [
+  { title: '젠탱글 아트 기법을 활용한 음악 정보 시각화 연구', year: '2025', journal: '예술과 과학기술', authors: 'Suhyeon Seo, YangKyu Lim 외' },
+  { title: 'Real-Time Detection of Track Hazards in Railway Systems Using Fast YOLO', year: '2025', journal: 'The International Journal of Advanced Smart Convergence', authors: '임양규 외' },
+  { title: 'Multi-AI 모델 융합 기반 한반도 위협 실시간 분석 및 의사결정 지원 시스템 연구', year: '2025', journal: '한국해군과학기술학회지', authors: '임양규 외' },
+  { title: 'AirSync: A New Way to Experience Air Guitar in VR', year: '2025', journal: 'Communications in Computer and Information Science', authors: '임양규 외' },
+  { title: 'Optimizing Real-Time Translation for AR Glasses: Enhancing Usability through Gesture and Content Algorithm', year: '2025', journal: 'Communications in Computer and Information Science', authors: '임양규 외' },
+  { title: '생성형 인공지능과 게임 엔진을 활용한 택견 콘텐츠 제작 방법 연구', year: '2024', journal: '택견학', authors: '임양규 외' },
+  { title: 'SoundLOGO: GPS 데이터를 이용한 음악적 소니피케이션 생성 방법과 효과에 관한 연구', year: '2024', journal: '한국게임학회 논문지', authors: '임양규 외' },
+  { title: '글래스형 증강현실 내비게이션 애플리케이션에서의 GUI 연구', year: '2022', journal: '아시아태평양융합연구교류논문지', authors: '임양규 외' },
+  { title: 'Digital Chuimsae: Evolution of Korean Traditional Performing Arts', year: '2022', journal: 'Communications in Computer and Information Science', authors: '임양규 외' },
+  { title: 'Metaverse-Driven Interactive Performing Arts Contents Development', year: '2022', journal: 'Communications in Computer and Information Science', authors: '임양규 외' },
+  { title: 'A Study on Software Proposals for Optimization of Augmented Reality Glasses', year: '2022', journal: 'Communications in Computer and Information Science', authors: '임양규 외' },
+  { title: '인공지능 감정분석 기술 기반 디지털 추임새', year: '2022', journal: '우리춤과 과학기술', authors: '임양규 외' },
+  { title: '인공지능 감정분석 기술을 이용한 관객 참여형 공연에서의 실감형 콘텐츠 생성 방식에 관한 연구', year: '2021', journal: '방송공학회 논문지', authors: '임양규 외' },
+  { title: 'PixE: Home Fitness Method Using Machine Learning with Smartphone', year: '2021', journal: 'Communications in Computer and Information Science', authors: '임양규 외' },
+  { title: 'Touch: Interactive Exhibition Using the Biometric Information of the Audience', year: '2021', journal: 'Communications in Computer and Information Science', authors: '임양규 외' },
+  { title: 'Performance visualization technology using data analyzed by Korean traditional music', year: '2021', journal: 'TECHART: Journal of Arts and Imaging Science', authors: '임양규 외' }
+];
 
 function setCurrentPage(pageKey){
   currentPage = pageKey;
@@ -173,8 +192,8 @@ function ensurePageHeader(){
       .top-nav {
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        gap: clamp(12px, 2.4vw, 34px);
+        justify-content: flex-start;
+        gap: clamp(10px, 2vw, 26px);
         margin: 20px -24px 0 -24px;
         padding: 3px 24px;
         background: ${THEME.midnight};
@@ -221,17 +240,16 @@ function ensurePageHeader(){
       }
 
       #site-footer-note {
-        position: fixed;
-        left: 50%;
-        bottom: 14px;
-        transform: translateX(-50%);
+        position: static;
+        display: block;
+        margin: 18px 0 0;
+        padding: 0 0 18px;
         font-family: 'SegaLight', 'Segoe UI', sans-serif;
         font-size: 11px;
         letter-spacing: 0.02em;
         color: rgba(240, 231, 213, 0.4);
-        z-index: 20;
         pointer-events: none;
-        white-space: nowrap;
+        white-space: normal;
         text-align: center;
         line-height: 1.4;
       }
@@ -270,7 +288,6 @@ function ensurePageHeader(){
       <div class="top-nav">
         <div class="top-nav-item active" data-page="home">Home</div>
         <div class="top-nav-item" data-page="members">Members</div>
-        <div class="top-nav-item" data-page="gallery">Gallery</div>
         <div class="top-nav-item" data-page="publications">Publications</div>
         <div class="top-nav-item" data-page="contact">Contact</div>
       </div>
@@ -373,16 +390,18 @@ function getRequiredCanvasHeight(){
     const introH = estimateIntroCardHeight(introW, introContent);
     return topPad + introH + bottomPad;
   }
-  const columns = 2;
-  const buttonReserve = 46;
-  const rowGap = 14;
-  const rowHeight = cardH + buttonReserve + rowGap;
-  const py = 24 + 20;
-  const startY = py + cardH + buttonReserve + rowGap;
+  const bounds = getContentBounds();
+  const members = getMembersLayoutConfig(bounds);
+  const columns = members.columns;
+  const buttonReserve = members.buttonReserve;
+  const rowGap = members.rowGap;
+  const rowHeight = members.cardH + buttonReserve + rowGap;
+  const py = members.paddingTop;
+  const startY = py + members.cardH + buttonReserve + rowGap;
   const studentCount = max(0, profiles.length - 1);
   const studentRows = max(1, ceil(studentCount / columns));
   const lastRowY = startY + (studentRows - 1) * rowHeight;
-  const cardsBottom = lastRowY + cardH + buttonReserve + rowGap;
+  const cardsBottom = lastRowY + members.cardH + buttonReserve + rowGap;
   return max(windowHeight, cardsBottom + 48);
 }
 
@@ -420,9 +439,29 @@ function estimateIntroCardHeight(cardWidth, content){
   return ceil(fixedHeaderH + textBlockH + bottomPadding);
 }
 
+function getMembersLayoutConfig(bounds){
+  const columns = bounds.width < 860 ? 1 : 2;
+  const isCompact = bounds.width < 720;
+  const gap = isCompact ? 12 : 18;
+  const cardScale = columns === 1 && isCompact ? 0.9 : 1;
+  const availableW = bounds.width - (columns - 1) * gap;
+  const idealColW = floor(availableW / columns);
+  const cardWidthCap = columns === 1 ? (isCompact ? 540 : 620) : idealColW;
+  return {
+    columns,
+    gap,
+    isCompact,
+    cardW: columns === 1 ? floor(min(idealColW, cardWidthCap) * cardScale) : idealColW,
+    cardH: isCompact ? 154 : 160,
+    buttonReserve: isCompact ? 42 : 52,
+    rowGap: isCompact ? 11 : 14,
+    paddingTop: 44
+  };
+}
+
 function initMarginParticles(){
   marginParticles = [];
-  const count = 72;
+  const count = 78;
   const bounds = getContentBounds();
   for (let i = 0; i < count; i++) {
     const side = random() < 0.5 ? 'left' : 'right';
@@ -436,7 +475,9 @@ function initMarginParticles(){
       vy: random(0.25, 0.8),
       seed: random(1000),
       len: random(8, 18),
-      alpha: random(18, 52)
+      alpha: random(22, 58),
+      spin: random(TWO_PI),
+      shape: random(['dot', 'diamond', 'line', 'tri'])
     });
   }
 }
@@ -464,21 +505,37 @@ function drawMarginParticles(){
       p.y = -random(10, 90);
       p.seed = random(1000);
       p.alpha = random(28, 80);
+      p.shape = random(['dot', 'diamond', 'line', 'tri']);
     }
 
-    const scaleAmp = 0.8 + amp * 1.8;
-    const baseSize = 3.2;
-    const size = baseSize * scaleAmp;
+    const scaleAmp = 0.9 + amp * 1.9;
+    const size = (3.1 + p.len * 0.16) * scaleAmp;
     const dx = sin(frameCount * 0.03 + p.seed) * (1.2 + amp * 3.6);
-    const opacity = p.alpha * (0.6 + amp * 0.4);
+    const opacity = p.alpha * (0.64 + amp * 0.42);
+    push();
+    translate(p.x + dx, p.y);
+    rotate(p.spin + frameCount * 0.01);
     fill(240, 231, 213, opacity);
-    ellipse(p.x + dx, p.y, size, size);
+    noStroke();
+    if (p.shape === 'diamond') {
+      rectMode(CENTER);
+      rect(0, 0, size, size * 1.18, 1.5);
+    } else if (p.shape === 'line') {
+      stroke(240, 231, 213, opacity);
+      strokeWeight(max(1, size * 0.16));
+      line(-size * 0.7, 0, size * 0.7, 0);
+    } else if (p.shape === 'tri') {
+      triangle(-size * 0.55, size * 0.35, 0, -size * 0.6, size * 0.55, size * 0.35);
+    } else {
+      ellipse(0, 0, size, size);
+    }
+    pop();
   }
 }
 
 function getContactPanelMetrics(){
   const bounds = getContentBounds();
-  const panelW = min(bounds.width - 120, 760);
+  const panelW = min(bounds.width - 10, 920);
   const panelX = bounds.left + (bounds.width - panelW) / 2;
   const panelY = 24;
   const availableH = max(280, windowHeight - getHeaderHeight() - 70);
@@ -635,7 +692,7 @@ function drawPlaceholderPage(){
   setCanvasFont('regular');
   textSize(15);
   fill(22, 21, 29, 180);
-  text('This section is being prepared.\nMembers currently contains the profile cards and interactions.', x + 28, y + 78);
+  text('\nSEGA 갤러리는 준비중', x + 28, y + 78);
 }
 
 function drawContactPage(){
@@ -656,7 +713,7 @@ function drawContactPage(){
   textSize(26);
   text('Welcome to SEGA', panelX + 24, panelY + 25);
 
-  const imgDisplayW = (panelW - 48) * 0.528;
+  const imgDisplayW = (panelW - 48) * 0.42;
   const mapY = panelY + 79;
   const imgX = panelX + (panelW - imgDisplayW) / 2;
 
@@ -670,6 +727,7 @@ function drawContactPage(){
     imageMode(CORNER);
     image(images.contactImg, imgX, mapY, imgDisplayW, imgDisplayH);
   }
+  
 
   // Text below image
   fill(22, 21, 29, 200);
@@ -680,46 +738,13 @@ function drawContactPage(){
   text('서울특별시 도봉구 삼양로 144길 33 덕성여자대학교\n\n차미리사관 352호', panelX + panelW / 2, mapY + imgDisplayH + 20);
 }
 
-function drawMapPlaceholder(x, y, w, h){
-  // Draw gradient-like map background
-  noStroke();
-  fill(200, 210, 220);
-  rect(x, y, w, h, 8);
-  
-  // Add map-like grid pattern
-  stroke(180, 190, 200);
-  strokeWeight(1);
-  const gridSize = 40;
-  for (let i = 0; i * gridSize < w; i++) {
-    line(x + i * gridSize, y, x + i * gridSize, y + h);
-  }
-  for (let j = 0; j * gridSize < h; j++) {
-    line(x, y + j * gridSize, x + w, y + j * gridSize);
-  }
-  
-  // Add marker pin
-  noStroke();
-  fill(220, 60, 60);
-  const pinX = x + w * 0.35;
-  const pinY = y + h * 0.45;
-  ellipse(pinX, pinY, 16, 16);
-  fill(240, 231, 213);
-  ellipse(pinX, pinY, 6, 6);
-  
-  // Add location label
-  setCanvasFont('semiBold');
-  textSize(13);
-  fill(60, 60, 80);
-  textAlign(LEFT, TOP);
-  text('Duksung Univ.', pinX + 20, pinY - 12);
-}
-
 function drawPublicationsPage(){
   const bounds = getContentBounds();
   const panelW = min(bounds.width - 10, 920);
   const panelX = bounds.left + (bounds.width - panelW) / 2;
   const panelY = 24;
   const panelH = min(height - 94, 680);
+  publicationScholarRect = null;
 
   noStroke();
   fill(240, 231, 213, 242);
@@ -733,22 +758,61 @@ function drawPublicationsPage(){
 
   setCanvasFont('semiBold');
   textAlign(LEFT, TOP);
-  textSize(18);
+  textSize(17);
   fill(22, 21, 29, 220);
-  text('임양규 교수 - Google Scholar', panelX + 24, panelY + 74);
+  text('임양규 교수 논문 목록', panelX + 24, panelY + 74);
+
+  drawPublicationEntries(panelX + 24, panelY + 112, panelW - 48, panelH - 150);
+}
+
+function drawPublicationEntries(x, y, w, h){
+  const items = PUBLICATIONS.slice().sort((a, b) => Number(b.year) - Number(a.year));
+  const isCompact = w < 640;
+  const titleSize = isCompact ? 11.5 : 12.5;
+  const yearSize = isCompact ? 14 : 16;
+  const rowGap = isCompact ? 14 : 17;
+  const yearGap = isCompact ? 12 : 14;
+  let cursorY = y;
+  let currentYear = null;
 
   setCanvasFont('regular');
-  textSize(14);
-  fill(22, 21, 29, 180);
-  textLeading(22);
-  const scholarLink = 'Scholar Profile: https://scholar.google.com/citations?hl=ko&user=Abd4YukAAAAJ&view_op=list_works';
-  const publicationText = 'Recent publications and research works are available on the Google Scholar profile.\n\nTopics include:\n- Computer-based Music Conducting\n- Sound Programming & Audio Processing\n- Generative Arts & Interactive Media\n- Traditional Music Digitalization\n- VR & Immersive Technologies';
-  text(publicationText, panelX + 24, panelY + 108, panelW - 48, panelH - 160);
+  textAlign(LEFT, TOP);
 
-  fill(240, 231, 213, 210);
-  textSize(13);
-  setCanvasFont('light');
-  text(scholarLink, panelX + 24, panelY + panelH - 50, panelW - 48);
+  for (const item of items) {
+    if (item.year !== currentYear) {
+      currentYear = item.year;
+      fill(18, 36, 88, 230);
+      setCanvasFont('semiBold');
+      textSize(yearSize);
+      text(currentYear, x, cursorY);
+      cursorY += yearSize + yearGap;
+    }
+
+    const citation = `${item.title} — ${item.authors || '임양규 외'} · ${item.journal}`;
+    setCanvasFont('regular');
+    textSize(titleSize);
+    const lineText = fitTextToWidth(citation, w - 22);
+
+    fill(18, 36, 88, 235);
+    noStroke();
+    rect(x, cursorY + 5, 7, 7, 2);
+    fill(22, 21, 29, 225);
+    text(lineText, x + 16, cursorY, w - 22, titleSize + 8);
+    cursorY += titleSize + rowGap;
+
+    if (cursorY > y + h) break;
+  }
+}
+
+function fitTextToWidth(textValue, maxWidth){
+  let value = textValue || '';
+  if (textWidth(value) <= maxWidth) return value;
+
+  const ellipsis = '...';
+  while (value.length > 0 && textWidth(value + ellipsis) > maxWidth) {
+    value = value.slice(0, -1);
+  }
+  return value.length > 0 ? value + ellipsis : ellipsis;
 }
 
 function separateNodes(){
@@ -872,21 +936,20 @@ function drawBackgroundWave() {
 function layoutCards(){
   const bounds = getContentBounds();
   // responsive card size: keep two cards per row across the design content width
-  const gap = 18;
-  const columns = bounds.width < 860 ? 1 : 2;
-  const availableW = bounds.width - (columns - 1) * gap;
-  const idealColW = floor(availableW / columns);
-  cardW = columns === 1 ? min(idealColW, 620) : idealColW;
-  cardH = 160; // increased from 140
+  const members = getMembersLayoutConfig(bounds);
+  const gap = members.gap;
+  const columns = members.columns;
+  cardW = members.cardW;
+  cardH = members.cardH;
   padding = 24;
-  const buttonReserve = 52;
-  const rowGap = 14;
+  const buttonReserve = members.buttonReserve;
+  const rowGap = members.rowGap;
   const rowHeight = cardH + buttonReserve + rowGap;
 
   // compute base positions
   let px = columns === 1 ? bounds.left + (bounds.width - cardW) / 2 : bounds.left;
   let py = padding + 20;
-  let startY = py + cardH + buttonReserve + rowGap;
+  let startY = py + members.cardH + buttonReserve + rowGap;
   let x = columns === 1 ? px : bounds.left;
   let y = startY;
   let basePos = {};
@@ -974,8 +1037,9 @@ function drawCard(p, x, y, w, h, alpha, isFocused, focusMode){
   }
 
   // photo area (circular)
-  let imgSize = isFocused ? 128 : ((p.type==='professor')?116:105);
-  let ix = x + (isFocused ? 24 : 18);
+  const isCompact = w < 380;
+  let imgSize = isFocused ? (isCompact ? 116 : 128) : ((p.type==='professor') ? (isCompact ? 86 : 116) : (isCompact ? 78 : 105));
+  let ix = x + (isFocused ? 24 : (isCompact ? 12 : 18));
   let iy = isFocused ? (y + 24) : (y + (h - imgSize)/2);
   let cx = ix + imgSize/2; let cy = iy + imgSize/2;
   fill(22, 21, 29, isFocused ? (40 * (cardAlpha / 255)) : 120); noStroke(); ellipse(cx, cy, imgSize, imgSize);
@@ -1011,22 +1075,22 @@ function drawCard(p, x, y, w, h, alpha, isFocused, focusMode){
 
   // text
   textAlign(LEFT, TOP);
-  let tx = ix + imgSize + (isFocused ? 22 : 24);
-  let ty = y + (isFocused ? 26 : 20);
+  let tx = ix + imgSize + (isFocused ? 22 : (isCompact ? 16 : 24));
+  let ty = y + (isFocused ? 26 : (isCompact ? 18 : 20));
   setCanvasFont('semiBold');
   if (isFocused) fill(22, 21, 29, cardAlpha);
   else fill(240, 231, 213, cardAlpha);
   if (isFocused) textSize((p.type === 'professor') ? 28 : 24);
-  else if (p.type === 'professor') { textSize(24); }
-  else { textSize(20); }
+  else if (p.type === 'professor') { textSize(isCompact ? 20 : 24); }
+  else { textSize(isCompact ? 17 : 20); }
   text(p.name, tx, ty);
   setCanvasFont('regular');
-  textSize(isFocused ? 16 : 15);
+  textSize(isFocused ? 16 : (isCompact ? 12 : 15));
   if (isFocused) fill(22, 21, 29, 180 * (cardAlpha / 255));
   else fill(240, 231, 213, 205 * (cardAlpha / 255));
   text(p.title, tx, ty + ((p.type==='professor')?42:38));
   setCanvasFont('light');
-  textSize(isFocused ? 14 : 13);
+  textSize(isFocused ? 14 : (isCompact ? 11 : 13));
   if (isFocused) fill(22, 21, 29, 160 * (cardAlpha / 255));
   else fill(240, 231, 213, 175 * (cardAlpha / 255));
   text(p.email, tx, ty + ((p.type==='professor')?66:60));
@@ -1082,16 +1146,17 @@ function drawCard(p, x, y, w, h, alpha, isFocused, focusMode){
 
 function drawButtons(p, x, y, w, h, alpha){
   push();
-  let imgSize = (p.type === 'professor') ? 116 : 105;
-  let bx = x + 18 + imgSize + 24 - 2;
-  let bh = 30; let bgap = 6;
-  let padX = 7;
+  const compact = w < 380;
+  let imgSize = (p.type === 'professor') ? (compact ? 86 : 116) : (compact ? 78 : 105);
+  let bx = x + (compact ? 12 : 18) + imgSize + (compact ? 16 : 24) - 2;
+  let bh = compact ? 24 : 30; let bgap = compact ? 3 : 6;
+  let padX = compact ? 4 : 7;
   let emailY = y + 30 + ((p.type === 'professor') ? 66 : 60);
   let by = min(y + h - bh - 8, emailY + 15);
-  let buttons = (p.type === 'professor')?['Profile','Google Scholar','YouTube']:['Profile','연구업적'];
+  let buttons = (p.type === 'professor')?['Profile','Google Scholar','YouTube']:['Profile','Publications'];
   p._buttons = p._buttons || [];
   setCanvasFont('semiBold');
-  textSize(12);
+  textSize(compact ? 9.5 : 12);
   textAlign(CENTER, CENTER);
   let cx = bx;
   for(let i=0;i<buttons.length;i++){
@@ -1132,8 +1197,7 @@ function drawProfessorIntroText(content, x, y, w, h, alphaScale){
     'education',
     'research and development',
     'course instructor',
-    'performance & exhibition highlights',
-    'contact'
+    'performance & exhibition highlights'
   ]);
 
   const lines = (content || '').split('\n');
@@ -1158,8 +1222,7 @@ function drawProfessorIntroText(content, x, y, w, h, alphaScale){
       /^education\s*:/i.test(trimmed) ||
       /^research\s+and\s+development\s*:/i.test(trimmed) ||
       /^course\s+instructor\s*:/i.test(trimmed) ||
-      /^performance\s*&\s*exhibition\s+highlights\s*:/i.test(trimmed) ||
-      /^contact\s*:/i.test(trimmed);
+      /^performance\s*&\s*exhibition\s+highlights\s*:/i.test(trimmed);
     if (isHeading) {
       setCanvasFont('semiBold');
       textSize(17);
@@ -1227,18 +1290,18 @@ function mousePressed(){
             visibleButtons = {};
             window.scrollTo(0, 0);
             if (p.id === 'prof') {/* 임양규 */
-              introContent = `\n\nEducation:\n2015-2020 Chung-Ang University, Seoul, South Korea, Ph.D. in Film and Media Studies (중앙대학교 첨단영상대학원, 영상학박사)\n2007-2015 KAIST, Daejeon, South Korea, Master of Science (카이스트 문화기술대학원, 공학석사)\n2004-2007 University of Music Franz Liszt Weimar, Germany, Pädagogisches Diplom (Master of Music in Education) in Classical Trumpet (독일 국립 리스트 음악원, 교육학 석사)\n2002-2004 University of Music Franz Liszt Weimar, Germany, Vordiplom (Pre-Diploma in Music) in Classical Trumpet (독일 국립 리스트 음악원, 음악 학사)\n2001- Korean National University of Art, Major in Trumpet (한국예술종합학교 음악원 기악과)\n\nResearch and Development:\n- Global Ph.D. Fellowship - Ministry of Education, Science and Technology (Apr. 2015 - Mar. 2018)\n- Subject: Computer-based Music Conducting\n- Chung-Ang University Hospital (Sep. 2014 - Mar. 2015) - Subject: Development of Game Analysis Model for Serious Games\n- KAIST (Apr. 2012 - Mar. 2014) - Subject: Standardization of Recording Techniques and Development of Composition/Arrangement Tools for Korean Traditional Instruments\n- Development of Korean traditional music score digitalization program and MusicXML conversion tools\n\nCourse Instructor:\n- Sungkyunkwan University, Seoul, Korea: Art Technology 1 (Mar. 2020 - Present)\n- Chung-Ang University, Seoul, Korea: 3D Video Design, Sound Programming, Physical Computing (Mar. 2016 - Present)\n\nPerformance & Exhibition Highlights:\n- Music Skyline — SIGGRAPH 2018\n- Ars Electronica - Out of the Box (TechiEon)\n- Various concerts and collaborative performances (KBS, Seoul, international venues)\n\nContact: trumpetyk09@duksung.ac.kr`;
+              introContent = `\n\nEducation:\n2015-2020 Chung-Ang University, Seoul, South Korea, Ph.D. in Film and Media Studies (중앙대학교 첨단영상대학원, 영상학박사)\n2007-2015 KAIST, Daejeon, South Korea, Master of Science (카이스트 문화기술대학원, 공학석사)\n2004-2007 University of Music Franz Liszt Weimar, Germany, Pädagogisches Diplom (Master of Music in Education) in Classical Trumpet (독일 국립 리스트 음악원, 교육학 석사)\n2002-2004 University of Music Franz Liszt Weimar, Germany, Vordiplom (Pre-Diploma in Music) in Classical Trumpet (독일 국립 리스트 음악원, 음악 학사)\n2001- Korean National University of Art, Major in Trumpet (한국예술종합학교 음악원 기악과)\n\nResearch and Development:\n- Global Ph.D. Fellowship - Ministry of Education, Science and Technology (Apr. 2015 - Mar. 2018)\n- Subject: Computer-based Music Conducting\n- Chung-Ang University Hospital (Sep. 2014 - Mar. 2015) - Subject: Development of Game Analysis Model for Serious Games\n- KAIST (Apr. 2012 - Mar. 2014) - Subject: Standardization of Recording Techniques and Development of Composition/Arrangement Tools for Korean Traditional Instruments\n- Development of Korean traditional music score digitalization program and MusicXML conversion tools\n\nCourse Instructor:\n- Sungkyunkwan University, Seoul, Korea: Art Technology 1 (Mar. 2020 - Present)\n- Chung-Ang University, Seoul, Korea: 3D Video Design, Sound Programming, Physical Computing (Mar. 2016 - Present)\n\nPerformance & Exhibition Highlights:\n- Music Skyline — SIGGRAPH 2018\n- Ars Electronica - Out of the Box (TechiEon)\n- Various concerts and collaborative performances (KBS, Seoul, international venues)`;
             } else if (p.id === 'moon') {/* 문민혜 */
-              introContent = `\n\nICT융합공학과 석사과정\n관심분야: 인터랙티브 미디어, 3D 비주얼, 사운드 프로그래밍\n연구주제: 미디어 아트에서의 사운드-비주얼 상호작용과 인터랙션 디자인\n학력/경력 요약: 관련 프로젝트 및 전시 다수 참여\nContact: minhyemoon@duksung.ac.kr`;
+              introContent = `\n\nICT융합공학과 석사과정\n관심분야: 인터랙티브 미디어, 3D 비주얼, 사운드 프로그래밍\n연구주제: 미디어 아트에서의 사운드-비주얼 상호작용과 인터랙션 디자인\n학력/경력 요약: 관련 프로젝트 및 전시 다수 참여`;
             } else if (p.id === 'seo') {/* 서수현 */
-              introContent = `\nICT융합공학과 석사과정\n관심분야: 미디어 디자인, 사용자 경험\n연구주제: 인터랙션 디자인 기반 프로젝트\nContact: watermu@duksung.ac.kr`;
+              introContent = `\nICT융합공학과 석사과정\n관심분야: 미디어 디자인, 사용자 경험\n연구주제: 인터랙션 디자인 기반 프로젝트`;
             } else if (p.id === 'shim') {/* 심보광 */
               introContent = '\n글래스형 증강현실 내비게이션 애플리케이션에서의 GUI 연구\nA Study of GUI for GPS Application in AR Glasses';
             } else {
               introContent = '\n' + p.name + ' (프로필 준비중)';
             }
             return;
-          } else if (b.label === '연구업적'){
+          } else if (b.label === 'Publications'){
             if (p.id === 'shim') window.open('https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002914157','_blank');
             else if (p.id === 'boti') window.open('https://www.earticle.net/Article/A474319','_blank');
             else if (p.id === 'seo') window.open('https://scholar.google.com/citations?hl=ko&user=FsV6clgAAAAJ','_blank');
