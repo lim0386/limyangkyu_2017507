@@ -6,10 +6,10 @@ let wavePoints = []; // store wave y-values per x-step for collision
 const WAVE_STEP = 10;
 const GRAVITY = 0.25;
 const THEME = {
-  midnight: '#122C4F',
-  pearl: '#FBF9E4',
+  midnight: '#212842',
+  pearl: '#F0E7D5',
   noir: '#000000',
-  ocean: '#5B88B2'
+  ocean: '#212842'
 };
 
 // UI data
@@ -166,7 +166,11 @@ function setup() {
 }
 
 function draw() {
-  background(THEME.noir);
+  background(THEME.pearl);
+  noStroke();
+  const professorBottomY = 24 + 20 + cardH + 8;
+  fill(THEME.midnight);
+  rect(0, professorBottomY, width, height - professorBottomY);
 
   drawBackgroundWave();
 
@@ -259,11 +263,11 @@ class MenuNode {
   }
 
   display() {
-    stroke(251, 249, 228, 150);
+    stroke(240, 231, 213, 150);
     noFill();
     ellipse(this.pos.x, this.pos.y, this.size);
     if (this.isHovered) {
-      fill(91, 136, 178, 55);
+      fill(240, 231, 213, 45);
       ellipse(this.pos.x, this.pos.y, this.size * 1.2);
     }
     textAlign(CENTER, CENTER);
@@ -279,7 +283,7 @@ function drawBackgroundWave() {
   let amp = constrain(map(micLevel, 0, 0.3, 0, 1), 0, 1);
   let sway = amp * 700;
 
-  stroke(91, 136, 178, 85);
+  stroke(240, 231, 213, 80);
   noFill();
   wavePoints = [];
   beginShape();
@@ -330,19 +334,19 @@ function drawCard(p, x, y, w, h){
   push();
   // drop shadow
   noStroke();
-  if (p.type === 'professor') fill(251, 249, 228, 95);
-  else fill(18, 44, 79, 130);
+  if (p.type === 'professor') fill(240, 231, 213, 95);
+  else fill(33, 40, 66, 140);
   rect(x+4, y+6, w, h, 12);
   // card background
-  if (p.type === 'professor') fill(251, 249, 228, 248);
-  else fill(18, 44, 79, 240);
+  if (p.type === 'professor') fill(240, 231, 213, 248);
+  else fill(33, 40, 66, 240);
   rect(x, y, w, h, 12);
 
   // photo area (circular)
   let imgSize = (p.type==='professor')?100:90;
   let ix = x + 18; let iy = y + (h - imgSize)/2;
   let cx = ix + imgSize/2; let cy = iy + imgSize/2;
-  fill(91, 136, 178, 90); noStroke(); ellipse(cx, cy, imgSize, imgSize);
+  fill(240, 231, 213, 45); noStroke(); ellipse(cx, cy, imgSize, imgSize);
   // for specific profiles we can pass a crop region so the important area is shown
   // 김영한은 기존 대비 20% 더 타이트하게, 얼굴 위치(약간 오른쪽/아래)에 맞춘 정사각형 크롭 사용
   if (p.id === 'kim' && p.img && p.img.width && p.img.height) {
@@ -366,8 +370,8 @@ function drawCard(p, x, y, w, h){
     drawCircularImage(p.img, ix, iy, imgSize, p._squareCrop);
   }
   // photo border (circle)
-  if (p.type === 'professor') stroke(18, 44, 79, 120);
-  else stroke(251, 249, 228, 90);
+  if (p.type === 'professor') stroke(33, 40, 66, 120);
+  else stroke(240, 231, 213, 100);
   noFill(); strokeWeight(2); ellipse(cx, cy, imgSize, imgSize);
   noStroke();
 
@@ -375,7 +379,7 @@ function drawCard(p, x, y, w, h){
   textAlign(LEFT, TOP);
   let tx = ix + imgSize + 24;
   let ty = y + 20;
-  setCanvasFont('extraBold');
+  setCanvasFont('semiBold');
   if (p.type === 'professor') fill(THEME.midnight);
   else fill(THEME.pearl);
   if (p.type === 'professor') { textSize(22); }
@@ -383,13 +387,13 @@ function drawCard(p, x, y, w, h){
   text(p.name, tx, ty);
   setCanvasFont('regular');
   textSize(14);
-  if (p.type === 'professor') fill(27, 59, 95, 210);
-  else fill(205, 221, 238, 235);
+  if (p.type === 'professor') fill(33, 40, 66, 220);
+  else fill(240, 231, 213, 205);
   text(p.title, tx, ty + ((p.type==='professor')?30:26));
   setCanvasFont('light');
   textSize(13);
-  if (p.type === 'professor') fill(50, 80, 112, 190);
-  else fill(170, 196, 222, 230);
+  if (p.type === 'professor') fill(33, 40, 66, 180);
+  else fill(240, 231, 213, 175);
   text(p.email, tx, ty + ((p.type==='professor')?56:50));
 
   // hover detection -> extend expiry
@@ -422,13 +426,13 @@ function drawButtons(p, x, y, w, h, alpha){
   p._buttons = p._buttons || [];
   for(let i=0;i<buttons.length;i++){
     let rx = bx + i * (bw + bgap);
-    fill(251, 249, 228, alpha);
-    stroke(91, 136, 178, alpha);
+    fill(240, 231, 213, alpha);
+    stroke(33, 40, 66, alpha);
     strokeWeight(1);
     rect(rx, by, bw, bh, 8);
     noStroke();
     setCanvasFont('semiBold');
-    fill(18, 44, 79, alpha); textAlign(CENTER, CENTER); textSize(13);
+    fill(33, 40, 66, alpha); textAlign(CENTER, CENTER); textSize(13);
     text(buttons[i], rx + bw/2, by + bh/2);
     p._buttons[i] = { x: rx, y: by, w: bw, h: bh, label: buttons[i] };
   }
@@ -440,14 +444,14 @@ function drawIntroPanel(){
   let W = min(680, width - 80);
   let H = min(420, height - 160);
   let x = (width - W)/2; let y = (height - H)/2;
-  fill(18, 44, 79, 238); rect(x, y, W, H, 14);
+  fill(33, 40, 66, 238); rect(x, y, W, H, 14);
   setCanvasFont('regular');
   fill(THEME.pearl); textSize(16); textAlign(LEFT, TOP);
   text(introContent, x + 24, y + 24, W - 48, H - 80);
   // close button
-  let cx = x + W - 96; let cy = y + H - 56; fill(251, 249, 228); rect(cx, cy, 72, 36, 8);
+  let cx = x + W - 96; let cy = y + H - 56; fill(240, 231, 213); rect(cx, cy, 72, 36, 8);
   setCanvasFont('semiBold');
-  fill(18, 44, 79); textAlign(CENTER, CENTER); text('닫기', cx + 36, cy + 18);
+  fill(33, 40, 66); textAlign(CENTER, CENTER); text('닫기', cx + 36, cy + 18);
   pop();
 }
 
